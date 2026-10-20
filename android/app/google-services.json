@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "672234056787",
+    "firebase_url": "https://test-79fee-default-rtdb.firebaseio.com",
+    "project_id": "test-79fee",
+    "storage_bucket": "test-79fee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672234056787:android:52fa250f03fbdea13aaaa6",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRPqf0QM3Dp7p6rYqA7FDy2speJDgCcNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672234056787:android:44957deedf1b86253aaaa6",
+        "android_client_info": {
+          "package_name": "com.example.folks_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRPqf0QM3Dp7p6rYqA7FDy2speJDgCcNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672234056787:android:c6b5d9be5ed2f0663aaaa6",
+        "android_client_info": {
+          "package_name": "com.example.seafety_travel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRPqf0QM3Dp7p6rYqA7FDy2speJDgCcNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
