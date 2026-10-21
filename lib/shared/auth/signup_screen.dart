@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/country_service.dart';
 import '../theme/app_theme.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -15,12 +16,31 @@ class _SignupScreenState extends State<SignupScreen> {
   final _lastnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _countryController = TextEditingController();
   final AuthService _authService = AuthService();
+  final CountryService _countryService = CountryService();
 
   String? _gender;
+  String? _country;
+  DateTime? _dob;
+  List<String> _countries = [];
+  bool _loadingCountries = true;
   bool _loading = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCountries();
+  }
+
+  Future<void> _loadCountries() async {
+    final countries = await _countryService.getCountries();
+    if (!mounted) return;
+    setState(() {
+      _countries = countries;
+      _loadingCountries = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -28,8 +48,26 @@ class _SignupScreenState extends State<SignupScreen> {
     _lastnameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _countryController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDob() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(now.year - 20),
+      firstDate: DateTime(1900),
+      lastDate: now,
+    );
+    if (picked != null) {
+      setState(() => _dob = picked);
+    }
+  }
+
+  String _formatDob(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
   }
 
   Future<void> _signup() async {
@@ -43,10 +81,9 @@ class _SignupScreenState extends State<SignupScreen> {
       password: _passwordController.text,
       firstname: _firstnameController.text,
       lastname: _lastnameController.text,
-      country: _countryController.text.trim().isEmpty
-          ? null
-          : _countryController.text.trim(),
+      country: _country,
       gender: _gender,
+      dob: _dob == null ? null : _formatDob(_dob!),
     );
     if (!mounted) return;
     if (result == null) {
@@ -107,12 +144,38 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _countryController,
-                  decoration: const InputDecoration(
-                    labelText: 'Country (optional)',
-                  ),
-                ),
+                _loadingCountries
+                    ? const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                            SizedBox(width: 12),
+                            Text('Loading countries...'),
+                          ],
+                        ),
+                      )
+                    : DropdownButtonFormField<String>(
+                        initialValue: _country,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Country (optional)',
+                        ),
+                        items: _countries
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c,
+                                child: Text(c),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) =>
+                            setState(() => _country = value),
+                      ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: _gender,
@@ -125,6 +188,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     DropdownMenuItem(value: 'Other', child: Text('Other')),
                   ],
                   onChanged: (value) => setState(() => _gender = value),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: _pickDob,
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Date of birth (optional)',
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    child: Text(
+                      _dob == null ? 'Select date' : _formatDob(_dob!),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 if (_error != null)
