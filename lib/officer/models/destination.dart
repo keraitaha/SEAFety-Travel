@@ -21,17 +21,13 @@ class Destination {
     this.published = false,
   });
 
-  factory Destination.fromMap(
-    String id,
-    Map<String, dynamic> data,
-  ) {
+  factory Destination.fromMap(String id, Map<String, dynamic> data) {
     return Destination(
       id: id,
       name: data['name'] as String? ?? '',
       country: data['country'] as String? ?? '',
       description: data['description'] as String? ?? '',
-      safetyInformation:
-          data['safetyInformation'] as String? ?? '',
+      safetyInformation: data['safetyInformation'] as String? ?? '',
       visaInformation: data['visaInformation'] as String? ?? '',
       sourceUrl: data['sourceUrl'] as String? ?? '',
       risk: data['risk'] as String? ?? 'Low',

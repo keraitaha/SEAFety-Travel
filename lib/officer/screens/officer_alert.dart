@@ -13,10 +13,7 @@ class OfficerAlerts extends StatefulWidget {
 class _OfficerAlertsState extends State<OfficerAlerts> {
   final _service = OfficerFirebaseService();
 
-  Future<void> _showForm({
-    String? id,
-    Map<String, dynamic>? existing,
-  }) async {
+  Future<void> _showForm({String? id, Map<String, dynamic>? existing}) async {
     final formKey = GlobalKey<FormState>();
 
     final title = TextEditingController(text: existing?['title'] ?? '');
@@ -26,9 +23,7 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
     final sourceName = TextEditingController(
       text: existing?['sourceName'] ?? '',
     );
-    final sourceUrl = TextEditingController(
-      text: existing?['sourceUrl'] ?? '',
-    );
+    final sourceUrl = TextEditingController(text: existing?['sourceUrl'] ?? '');
     final latitude = TextEditingController(
       text: existing?['latitude']?.toString() ?? '',
     );
@@ -78,59 +73,61 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
                           : null,
                     ),
                     DropdownButtonFormField<String>(
-                      value: country,
+                      initialValue: country,
                       decoration: const InputDecoration(labelText: 'Country'),
                       items: countries
-                          .map((c) => DropdownMenuItem(
-                                value: c,
-                                child: Text(c),
-                              ))
+                          .map(
+                            (c) => DropdownMenuItem(value: c, child: Text(c)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) setDialogState(() => country = v);
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      value: type,
-                      decoration: const InputDecoration(labelText: 'Alert type'),
-                      items: [
-                        'Travel Advisory',
-                        'Weather',
-                        'Security',
-                        'Transport',
-                        'Natural Disaster',
-                        'Other',
-                      ]
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
-                          .toList(),
+                      initialValue: type,
+                      decoration: const InputDecoration(
+                        labelText: 'Alert type',
+                      ),
+                      items:
+                          [
+                                'Travel Advisory',
+                                'Weather',
+                                'Security',
+                                'Transport',
+                                'Natural Disaster',
+                                'Other',
+                              ]
+                              .map(
+                                (v) =>
+                                    DropdownMenuItem(value: v, child: Text(v)),
+                              )
+                              .toList(),
                       onChanged: (v) {
                         if (v != null) setDialogState(() => type = v);
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      value: risk,
-                      decoration: const InputDecoration(labelText: 'Risk level'),
+                      initialValue: risk,
+                      decoration: const InputDecoration(
+                        labelText: 'Risk level',
+                      ),
                       items: ['Low', 'Medium', 'High', 'Critical']
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
+                          .map(
+                            (v) => DropdownMenuItem(value: v, child: Text(v)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) setDialogState(() => risk = v);
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      value: status,
+                      initialValue: status,
                       decoration: const InputDecoration(labelText: 'Status'),
                       items: ['Active', 'Resolved', 'Expired']
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
+                          .map(
+                            (v) => DropdownMenuItem(value: v, child: Text(v)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) setDialogState(() => status = v);
@@ -153,8 +150,7 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
                       contentPadding: EdgeInsets.zero,
                       title: const Text('Emergency alert'),
                       value: emergency,
-                      onChanged: (v) =>
-                          setDialogState(() => emergency = v),
+                      onChanged: (v) => setDialogState(() => emergency = v),
                     ),
                     if (emergency) ...[
                       TextFormField(
@@ -302,9 +298,9 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
         await _service.deleteAlert(id);
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not delete alert: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Could not delete alert: $e')));
         }
       }
     }

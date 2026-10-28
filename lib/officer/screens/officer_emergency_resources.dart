@@ -11,8 +11,7 @@ class OfficerEmergencyResources extends StatefulWidget {
       _OfficerEmergencyResourcesState();
 }
 
-class _OfficerEmergencyResourcesState
-    extends State<OfficerEmergencyResources> {
+class _OfficerEmergencyResourcesState extends State<OfficerEmergencyResources> {
   final _service = OfficerFirebaseService();
 
   Future<void> _showForm() async {
@@ -54,20 +53,21 @@ class _OfficerEmergencyResourcesState
                           : null,
                     ),
                     DropdownButtonFormField<String>(
-                      value: resourceType,
+                      initialValue: resourceType,
                       decoration: const InputDecoration(
                         labelText: 'Resource type',
                       ),
-                      items: [
-                        'Embassy',
-                        'Local Authority',
-                        'Emergency Instructions',
-                      ]
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
-                          .toList(),
+                      items:
+                          [
+                                'Embassy',
+                                'Local Authority',
+                                'Emergency Instructions',
+                              ]
+                              .map(
+                                (v) =>
+                                    DropdownMenuItem(value: v, child: Text(v)),
+                              )
+                              .toList(),
                       onChanged: (v) {
                         if (v != null) {
                           setDialogState(() => resourceType = v);
@@ -75,15 +75,14 @@ class _OfficerEmergencyResourcesState
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      value: country,
+                      initialValue: country,
                       decoration: const InputDecoration(
                         labelText: 'Country covered',
                       ),
                       items: countries
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
+                          .map(
+                            (v) => DropdownMenuItem(value: v, child: Text(v)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) {
@@ -160,9 +159,7 @@ class _OfficerEmergencyResourcesState
                 } catch (e) {
                   if (mounted) {
                     ScaffoldMessenger.of(this.context).showSnackBar(
-                      SnackBar(
-                        content: Text('Could not save resource: $e'),
-                      ),
+                      SnackBar(content: Text('Could not save resource: $e')),
                     );
                   }
                 }
@@ -266,9 +263,7 @@ class _OfficerEmergencyResourcesState
                     '${data['resourceType'] ?? 'Other'} • '
                     '${data['country'] ?? ''}',
                   ),
-                  childrenPadding: const EdgeInsets.fromLTRB(
-                    16, 0, 16, 16,
-                  ),
+                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: [
                     if ((data['hostCountry'] ?? '').toString().isNotEmpty)
                       _detail('Host country', data['hostCountry']),
@@ -306,10 +301,7 @@ class _OfficerEmergencyResourcesState
   Widget _detail(String label, dynamic value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: SizedBox(
-        width: double.infinity,
-        child: Text('$label: $value'),
-      ),
+      child: SizedBox(width: double.infinity, child: Text('$label: $value')),
     );
   }
 }

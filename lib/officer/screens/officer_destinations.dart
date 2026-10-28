@@ -46,9 +46,7 @@ class OfficerDestinations extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
-                  leading: const CircleAvatar(
-                    child: Icon(Icons.place),
-                  ),
+                  leading: const CircleAvatar(child: Icon(Icons.place)),
                   title: Text(name.toString()),
                   subtitle: Text(
                     '$country\nRisk: $risk • '
@@ -64,22 +62,12 @@ class OfficerDestinations extends StatelessWidget {
                           existingData: data,
                         );
                       } else if (value == 'delete') {
-                        _confirmDelete(
-                          context,
-                          document.id,
-                          name.toString(),
-                        );
+                        _confirmDelete(context, document.id, name.toString());
                       }
                     },
                     itemBuilder: (context) => const [
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Text('Edit'),
-                      ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Text('Delete'),
-                      ),
+                      PopupMenuItem(value: 'edit', child: Text('Edit')),
+                      PopupMenuItem(value: 'delete', child: Text('Delete')),
                     ],
                   ),
                   onTap: () {
@@ -138,9 +126,7 @@ class OfficerDestinations extends StatelessWidget {
           builder: (context, setDialogState) {
             return AlertDialog(
               title: Text(
-                documentId == null
-                    ? 'Add Destination'
-                    : 'Edit Destination',
+                documentId == null ? 'Add Destination' : 'Edit Destination',
               ),
               content: SizedBox(
                 width: 450,
@@ -176,22 +162,16 @@ class OfficerDestinations extends StatelessWidget {
                           'Visa information',
                           maxLines: 3,
                         ),
-                        _textField(
-                          sourceController,
-                          'Source URL (optional)',
-                        ),
+                        _textField(sourceController, 'Source URL (optional)'),
                         const SizedBox(height: 12),
                         DropdownButtonFormField<String>(
-                          value: risk,
+                          initialValue: risk,
                           decoration: const InputDecoration(
                             labelText: 'Risk level',
                             border: OutlineInputBorder(),
                           ),
                           items: const [
-                            DropdownMenuItem(
-                              value: 'Low',
-                              child: Text('Low'),
-                            ),
+                            DropdownMenuItem(value: 'Low', child: Text('Low')),
                             DropdownMenuItem(
                               value: 'Medium',
                               child: Text('Medium'),
@@ -226,9 +206,7 @@ class OfficerDestinations extends StatelessWidget {
               ),
               actions: [
                 TextButton(
-                  onPressed: saving
-                      ? null
-                      : () => Navigator.pop(dialogContext),
+                  onPressed: saving ? null : () => Navigator.pop(dialogContext),
                   child: const Text('Cancel'),
                 ),
                 FilledButton(
@@ -245,17 +223,13 @@ class OfficerDestinations extends StatelessWidget {
                             final data = <String, dynamic>{
                               'name': nameController.text.trim(),
                               'country': countryController.text.trim(),
-                              'description':
-                                  descriptionController.text.trim(),
-                              'safetyInformation':
-                                  safetyController.text.trim(),
-                              'visaInformation':
-                                  visaController.text.trim(),
+                              'description': descriptionController.text.trim(),
+                              'safetyInformation': safetyController.text.trim(),
+                              'visaInformation': visaController.text.trim(),
                               'sourceUrl': sourceController.text.trim(),
                               'risk': risk,
                               'published': published,
-                              'lastUpdated':
-                                  FieldValue.serverTimestamp(),
+                              'lastUpdated': FieldValue.serverTimestamp(),
                             };
 
                             final collection = FirebaseFirestore.instance
@@ -264,9 +238,7 @@ class OfficerDestinations extends StatelessWidget {
                             if (documentId == null) {
                               await collection.add(data);
                             } else {
-                              await collection
-                                  .doc(documentId)
-                                  .update(data);
+                              await collection.doc(documentId).update(data);
                             }
 
                             if (!dialogContext.mounted) return;
@@ -385,10 +357,7 @@ class OfficerDestinations extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           Text(text),
         ],
@@ -433,9 +402,9 @@ class OfficerDestinations extends StatelessWidget {
 
       if (!context.mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Destination deleted.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Destination deleted.')));
     } catch (error) {
       if (!context.mounted) return;
 

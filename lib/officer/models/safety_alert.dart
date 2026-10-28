@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SafetyAlert {
@@ -36,10 +35,7 @@ class SafetyAlert {
     this.endDate,
   });
 
-  factory SafetyAlert.fromMap(
-    String id,
-    Map<String, dynamic> data,
-  ) {
+  factory SafetyAlert.fromMap(String id, Map<String, dynamic> data) {
     DateTime? readDate(dynamic value) {
       if (value is Timestamp) return value.toDate();
       if (value is DateTime) return value;

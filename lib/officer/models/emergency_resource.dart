@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EmergencyResource {
@@ -26,10 +25,7 @@ class EmergencyResource {
     this.lastUpdated,
   });
 
-  factory EmergencyResource.fromMap(
-    String id,
-    Map<String, dynamic> data,
-  ) {
+  factory EmergencyResource.fromMap(String id, Map<String, dynamic> data) {
     final timestamp = data['lastUpdated'];
 
     return EmergencyResource(
@@ -42,8 +38,7 @@ class EmergencyResource {
       address: data['address'] as String? ?? '',
       instructions: data['instructions'] as String? ?? '',
       sourceUrl: data['sourceUrl'] as String? ?? '',
-      lastUpdated:
-          timestamp is Timestamp ? timestamp.toDate() : null,
+      lastUpdated: timestamp is Timestamp ? timestamp.toDate() : null,
     );
   }
 
@@ -57,8 +52,7 @@ class EmergencyResource {
       'address': address,
       'instructions': instructions,
       'sourceUrl': sourceUrl,
-      if (lastUpdated != null)
-        'lastUpdated': Timestamp.fromDate(lastUpdated!),
+      if (lastUpdated != null) 'lastUpdated': Timestamp.fromDate(lastUpdated!),
     };
   }
 }

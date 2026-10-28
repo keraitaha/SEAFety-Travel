@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -45,23 +44,18 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
                   children: [
                     TextFormField(
                       controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Zone name',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Zone name'),
                       validator: (v) => v == null || v.trim().isEmpty
                           ? 'Enter a zone name'
                           : null,
                     ),
                     DropdownButtonFormField<String>(
-                      value: zoneType,
-                      decoration: const InputDecoration(
-                        labelText: 'Zone type',
-                      ),
+                      initialValue: zoneType,
+                      decoration: const InputDecoration(labelText: 'Zone type'),
                       items: ['Safe', 'Danger']
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
+                          .map(
+                            (v) => DropdownMenuItem(value: v, child: Text(v)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) {
@@ -73,28 +67,26 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      value: risk,
+                      initialValue: risk,
                       decoration: const InputDecoration(
                         labelText: 'Risk level',
                       ),
                       items: ['Low', 'Medium', 'High', 'Critical']
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
+                          .map(
+                            (v) => DropdownMenuItem(value: v, child: Text(v)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) setDialogState(() => risk = v);
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      value: country,
+                      initialValue: country,
                       decoration: const InputDecoration(labelText: 'Country'),
                       items: OfficerFirebaseService.southeastAsianCountries
-                          .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(v),
-                              ))
+                          .map(
+                            (v) => DropdownMenuItem(value: v, child: Text(v)),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) setDialogState(() => country = v);
@@ -171,15 +163,15 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
       await _service.addZone(result);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Safety zone added.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Safety zone added.')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not add zone: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not add zone: $e')));
       }
     }
   }
@@ -208,9 +200,9 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
         await _service.deleteZone(id);
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not delete zone: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Could not delete zone: $e')));
         }
       }
     }
@@ -244,17 +236,17 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
           final isSafe = data['zoneType'] == 'Safe';
           final color = isSafe ? Colors.green : Colors.red;
           final position = LatLng(lat, lng);
-          final radiusKm =
-              ((data['radius'] as num?)?.toDouble() ?? 2).clamp(0.1, 1000);
+          final radiusKm = ((data['radius'] as num?)?.toDouble() ?? 2).clamp(
+            0.1,
+            1000,
+          );
 
           markers.add(
             Marker(
               markerId: MarkerId(doc.id),
               position: position,
               icon: BitmapDescriptor.defaultMarkerWithHue(
-                isSafe
-                    ? BitmapDescriptor.hueGreen
-                    : BitmapDescriptor.hueRed,
+                isSafe ? BitmapDescriptor.hueGreen : BitmapDescriptor.hueRed,
               ),
               infoWindow: InfoWindow(
                 title: data['name'] ?? 'Safety zone',
@@ -282,17 +274,12 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Text(
-                      'Long-press the map to add a safety zone.',
-                    ),
+                    child: Text('Long-press the map to add a safety zone.'),
                   ),
                   DropdownButton<String>(
                     value: _country,
                     items: OfficerFirebaseService.southeastAsianCountries
-                        .map((v) => DropdownMenuItem(
-                              value: v,
-                              child: Text(v),
-                            ))
+                        .map((v) => DropdownMenuItem(value: v, child: Text(v)))
                         .toList(),
                     onChanged: (v) {
                       if (v != null) setState(() => _country = v);

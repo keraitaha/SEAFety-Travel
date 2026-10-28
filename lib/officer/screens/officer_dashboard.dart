@@ -6,10 +6,7 @@ import '../../../shared/models/app_user.dart';
 class OfficerDashboard extends StatelessWidget {
   final AppUser currentUser;
 
-  const OfficerDashboard({
-    super.key,
-    required this.currentUser,
-  });
+  const OfficerDashboard({super.key, required this.currentUser});
 
   Stream<int> _count(String collection) {
     return FirebaseFirestore.instance
@@ -86,12 +83,7 @@ class OfficerDashboard extends StatelessWidget {
                 Icons.notifications_active,
                 Colors.orange,
               ),
-              _statCard(
-                'Safety Zones',
-                'danger_zones',
-                Icons.map,
-                Colors.red,
-              ),
+              _statCard('Safety Zones', 'danger_zones', Icons.map, Colors.red),
               _statCard(
                 'Emergency Resources',
                 'emergency_resources',

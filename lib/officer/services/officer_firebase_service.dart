@@ -51,10 +51,7 @@ class OfficerFirebaseService {
     await _destinations.add(data);
   }
 
-  Future<void> updateDestination(
-    String id,
-    Map<String, dynamic> data,
-  ) async {
+  Future<void> updateDestination(String id, Map<String, dynamic> data) async {
     _validateCountry(data['country']);
     data['lastUpdated'] = FieldValue.serverTimestamp();
     await _destinations.doc(id).update(data);
@@ -70,10 +67,7 @@ class OfficerFirebaseService {
     await _alerts.add(data);
   }
 
-  Future<void> updateAlert(
-    String id,
-    Map<String, dynamic> data,
-  ) async {
+  Future<void> updateAlert(String id, Map<String, dynamic> data) async {
     _validateCountry(data['country']);
     await _alerts.doc(id).update(data);
   }
@@ -103,8 +97,7 @@ class OfficerFirebaseService {
   }
 
   void _validateCountry(dynamic country) {
-    if (country is! String ||
-        !southeastAsianCountries.contains(country)) {
+    if (country is! String || !southeastAsianCountries.contains(country)) {
       throw ArgumentError('Please select a valid Southeast Asian country.');
     }
   }

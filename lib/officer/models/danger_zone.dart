@@ -29,10 +29,7 @@ class DangerZone {
     this.isActive = true,
   });
 
-  factory DangerZone.fromMap(
-    String id,
-    Map<String, dynamic> data,
-  ) {
+  factory DangerZone.fromMap(String id, Map<String, dynamic> data) {
     final timestamp = data['createdAt'];
 
     return DangerZone(

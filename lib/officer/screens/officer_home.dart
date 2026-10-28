@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'shared/models/app_user.dart';
-import 'shared/widgets/logout_button.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/widgets/auth_gate.dart';
 
-import 'screens/screens/screens/officer_dashboard.dart';
-import 'screens/screens/screens/officer_destinations.dart';
-import 'screens/screens/screens/officer_alerts.dart';
-import 'screens/screens/screens/officer_safety_map.dart';
-import 'screens/screens/screens/officer_emergency_resources.dart';
+import 'officer_dashboard.dart';
+import 'officer_destinations.dart';
+import 'officer_alert.dart';
+import 'officer_safety_map.dart';
+import 'officer_emergency_resources.dart';
 
 class OfficerHome extends StatefulWidget {
   final AppUser currentUser;
 
-  const OfficerHome({
-    super.key,
-    required this.currentUser,
-  });
+  const OfficerHome({super.key, required this.currentUser});
 
   @override
   State<OfficerHome> createState() => _OfficerHomeState();
@@ -45,14 +42,9 @@ class _OfficerHomeState extends State<OfficerHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_selectedIndex]),
-        actions: const [
-          LogoutButton(),
-        ],
+        actions: const [LogoutButton()],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
