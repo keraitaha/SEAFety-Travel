@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/models/destination_model.dart';
-import '../../shared/theme/app_theme.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/models/destination_model.dart';
+import 'package:seafety_travel/shared/theme/app_theme.dart';
 import '../services/destination_service.dart';
 
 class DestinationsScreen extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/widgets/auth_gate.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/widgets/auth_gate.dart';
 
 // Placeholder for the Tourist module (owned by a teammate).
 class TouristHome extends StatelessWidget {

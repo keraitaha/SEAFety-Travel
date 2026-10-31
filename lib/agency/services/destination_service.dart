@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../shared/models/destination_model.dart';
+import 'package:seafety_travel/shared/models/destination_model.dart';
 
-// Destinations are read-only for the agency (managed by the Tourism Officer).
+// Destinations
 class DestinationService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -10,9 +10,11 @@ class DestinationService {
         .collection('destinations')
         .where('published', isEqualTo: true)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => DestinationModel.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((d) => DestinationModel.fromMap(d.id, d.data()))
+              .toList(),
+        );
   }
 
   Future<DestinationModel?> getDestination(String destinationid) async {

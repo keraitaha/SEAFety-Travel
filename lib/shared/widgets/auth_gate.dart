@@ -4,10 +4,10 @@ import '../models/app_user.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
 import '../auth/login_screen.dart';
-import '../../agency/screens/agency_home.dart';
-import '../../tourist/screens/tourist_home.dart';
-import '../../officer/screens/officer_home.dart';
-import '../../admin/screens/admin_home.dart';
+import 'package:seafety_travel/agency/screens/agency_home.dart';
+import 'package:seafety_travel/tourist/screens/tourist_home.dart';
+import 'package:seafety_travel/officer/screens/officer_home.dart';
+import 'package:seafety_travel/admin/screens/admin_home.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -70,9 +70,7 @@ class _LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
 

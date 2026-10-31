@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CountryService {
-  // Free, no-key API. We only ask for the country name field.
+  // Country list API
   static const String _url = 'https://restcountries.com/v3.1/all?fields=name';
 
-  // Used if the network call fails so signup still works offline.
+  // Incase API call fails
   static const List<String> _fallback = [
     'Australia',
     'China',

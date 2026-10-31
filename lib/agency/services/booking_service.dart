@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../shared/models/booking_model.dart';
+import 'package:seafety_travel/shared/models/booking_model.dart';
 
 class BookingService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -7,14 +7,16 @@ class BookingService {
   CollectionReference<Map<String, dynamic>> get _col =>
       _db.collection('bookings');
 
-  // Live list of bookings for this agency.
+  // Live list of bookings for this agency
   Stream<List<BookingModel>> agencyBookings(String agencyuserid) {
     return _col
         .where('agencyuserid', isEqualTo: agencyuserid)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => BookingModel.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((d) => BookingModel.fromMap(d.id, d.data()))
+              .toList(),
+        );
   }
 
   Future<void> updateStatus({

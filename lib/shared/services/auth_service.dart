@@ -38,7 +38,6 @@ class AuthService {
         password: password,
       );
       final uid = cred.user!.uid;
-      // Normal signups are always Tourist (role 0).
       await _userService.createUserDoc(
         userid: uid,
         firstname: firstname.trim(),

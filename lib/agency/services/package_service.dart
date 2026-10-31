@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../shared/models/package_model.dart';
+import 'package:seafety_travel/shared/models/package_model.dart';
 
 class PackageService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -7,14 +7,16 @@ class PackageService {
   CollectionReference<Map<String, dynamic>> get _col =>
       _db.collection('packages');
 
-  // Live list of packages owned by this agency.
+  // Live list of packages owned by agency
   Stream<List<PackageModel>> myPackages(String agencyuserid) {
     return _col
         .where('agencyuserid', isEqualTo: agencyuserid)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => PackageModel.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((d) => PackageModel.fromMap(d.id, d.data()))
+              .toList(),
+        );
   }
 
   Future<void> addPackage({

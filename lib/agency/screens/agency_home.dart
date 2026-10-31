@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/widgets/auth_gate.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/widgets/auth_gate.dart';
 import 'packages_screen.dart';
 import 'destinations_screen.dart';
 import 'bookings_screen.dart';
@@ -30,7 +30,7 @@ class _AgencyHomeState extends State<AgencyHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text(titles[_index]),
-        actions: const [LogoutButton()],
+        actions: [const LogoutButton()],
       ),
       body: pages[_index],
       bottomNavigationBar: NavigationBar(
@@ -41,18 +41,12 @@ class _AgencyHomeState extends State<AgencyHome> {
             icon: Icon(Icons.card_travel),
             label: 'Packages',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.place),
-            label: 'Destinations',
-          ),
+          NavigationDestination(icon: Icon(Icons.place), label: 'Destinations'),
           NavigationDestination(
             icon: Icon(Icons.book_online),
             label: 'Bookings',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.chat),
-            label: 'Enquiries',
-          ),
+          NavigationDestination(icon: Icon(Icons.chat), label: 'Enquiries'),
         ],
       ),
     );

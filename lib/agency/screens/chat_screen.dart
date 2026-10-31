@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/models/conversation_model.dart';
-import '../../shared/theme/app_theme.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/models/conversation_model.dart';
+import 'package:seafety_travel/shared/theme/app_theme.dart';
 import '../services/conversation_service.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
           children: options
               .map(
                 (o) => ListTile(
-                  title: Text(o),
+                  title: Text(_service.statusLabel(o)),
                   onTap: () => Navigator.pop(ctx, o),
                 ),
               )

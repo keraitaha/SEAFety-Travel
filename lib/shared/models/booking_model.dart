@@ -47,9 +47,7 @@ class BookingModel {
       paymentstatus: data['paymentstatus'] ?? 'unpaid',
       specialrequests: data['specialrequests'],
       changehistory: List<Map<String, dynamic>>.from(
-        (data['changehistory'] ?? []).map(
-          (e) => Map<String, dynamic>.from(e),
-        ),
+        (data['changehistory'] ?? []).map((e) => Map<String, dynamic>.from(e)),
       ),
       createtime: data['createtime'],
       updatetime: data['updatetime'],

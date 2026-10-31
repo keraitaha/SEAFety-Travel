@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../cloudinary_service.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/models/destination_model.dart';
-import '../../shared/models/package_model.dart';
-import '../../shared/theme/app_theme.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/models/destination_model.dart';
+import 'package:seafety_travel/shared/models/package_model.dart';
+import 'package:seafety_travel/shared/theme/app_theme.dart';
 import '../services/destination_service.dart';
 import '../services/package_service.dart';
 

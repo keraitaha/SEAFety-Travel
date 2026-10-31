@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/country_service.dart';
-import '../theme/app_theme.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -167,14 +166,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         items: _countries
                             .map(
-                              (c) => DropdownMenuItem(
-                                value: c,
-                                child: Text(c),
-                              ),
+                              (c) => DropdownMenuItem(value: c, child: Text(c)),
                             )
                             .toList(),
-                        onChanged: (value) =>
-                            setState(() => _country = value),
+                        onChanged: (value) => setState(() => _country = value),
                       ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
@@ -224,12 +219,6 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         )
                       : const Text('Sign Up'),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'New accounts are registered as Tourist.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.lightBlue, fontSize: 12),
                 ),
               ],
             ),

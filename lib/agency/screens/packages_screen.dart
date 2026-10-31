@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/models/package_model.dart';
-import '../../shared/theme/app_theme.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/models/package_model.dart';
+import 'package:seafety_travel/shared/theme/app_theme.dart';
 import '../services/package_service.dart';
 import 'package_form_screen.dart';
 

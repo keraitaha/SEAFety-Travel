@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../../shared/models/app_user.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
 
 class OfficerDashboard extends StatelessWidget {
   final AppUser currentUser;

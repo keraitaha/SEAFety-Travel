@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/app_user.dart';
-import '../../shared/models/booking_model.dart';
+import 'package:seafety_travel/shared/models/app_user.dart';
+import 'package:seafety_travel/shared/models/booking_model.dart';
 import '../services/booking_service.dart';
 
 class BookingsScreen extends StatelessWidget {
@@ -43,15 +43,13 @@ class BookingsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      '${b.currency} ${b.totalprice.toStringAsFixed(2)}',
-                    ),
+                    Text('${b.currency} ${b.totalprice.toStringAsFixed(2)}'),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        _StatusChip(label: b.status),
+                        _StatusChip(label: b.status.toUpperCase()),
                         const SizedBox(width: 8),
-                        _StatusChip(label: b.paymentstatus),
+                        _StatusChip(label: b.paymentstatus.toUpperCase()),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -59,13 +57,11 @@ class BookingsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                          onPressed: () =>
-                              _changeStatus(context, service, b),
+                          onPressed: () => _changeStatus(context, service, b),
                           child: const Text('Status'),
                         ),
                         TextButton(
-                          onPressed: () =>
-                              _changePayment(context, service, b),
+                          onPressed: () => _changePayment(context, service, b),
                           child: const Text('Payment'),
                         ),
                       ],
@@ -88,12 +84,12 @@ class BookingsScreen extends StatelessWidget {
     _pickOption(
       context,
       title: 'Update booking status',
-      options: const ['pending', 'confirmed', 'cancelled'],
-      current: b.status,
+      options: const ['Pending', 'Confirmed', 'Cancelled'],
+      current: b.status.toUpperCase(),
       onSelected: (value) async {
         await service.updateStatus(
           bookingid: b.bookingid,
-          status: value,
+          status: value.toLowerCase(),
           summary: 'Status changed to $value',
         );
       },
@@ -108,12 +104,12 @@ class BookingsScreen extends StatelessWidget {
     _pickOption(
       context,
       title: 'Update payment status',
-      options: const ['unpaid', 'partial', 'paid'],
-      current: b.paymentstatus,
+      options: const ['Unpaid', 'Partial', 'Paid'],
+      current: b.paymentstatus.toUpperCase(),
       onSelected: (value) async {
         await service.updatePaymentStatus(
           bookingid: b.bookingid,
-          paymentstatus: value,
+          paymentstatus: value.toLowerCase(),
           summary: 'Payment changed to $value',
         );
       },
@@ -168,9 +164,6 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      label: Text(label),
-      visualDensity: VisualDensity.compact,
-    );
+    return Chip(label: Text(label), visualDensity: VisualDensity.compact);
   }
 }
