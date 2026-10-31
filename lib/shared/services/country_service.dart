@@ -3,9 +3,10 @@ import 'package:http/http.dart' as http;
 
 class CountryService {
   // Country list API
-  static const String _url = 'https://restcountries.com/v3.1/all?fields=name';
+  static const String _url =
+      'https://countriesnow.space/api/v0.1/countries/positions';
 
-  // Incase API call fails
+  // Incase API fails
   static const List<String> _fallback = [
     'Australia',
     'China',
@@ -26,12 +27,13 @@ class CountryService {
     try {
       final response = await http.get(Uri.parse(_url));
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        final List<dynamic> data = body['data'] ?? [];
         final names = <String>[];
         for (final item in data) {
-          final common = item['name']?['common'];
-          if (common is String && common.isNotEmpty) {
-            names.add(common);
+          final name = item['name'];
+          if (name is String && name.isNotEmpty) {
+            names.add(name);
           }
         }
         names.sort();
