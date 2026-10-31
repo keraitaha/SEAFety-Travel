@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../test_credentials.dart';
 import '../theme/app_theme.dart';
 import 'signup_screen.dart';
 
@@ -27,6 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    // TEST ONLY
+    if (_emailController.text.trim().isEmpty && _passwordController.text.isEmpty) {
+      _emailController.text = TestCredentials.email;
+      _passwordController.text = TestCredentials.password;
+    }
     if (!_formKey.currentState!.validate()) return;
     setState(() {
       _loading = true;
