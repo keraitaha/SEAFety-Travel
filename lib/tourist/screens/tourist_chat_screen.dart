@@ -172,7 +172,13 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
                       itemBuilder: (context, i) {
                         final message = messages[i];
                         final own = message.senderId == widget.store.userId;
-                        return Align(
+                        final prev = i > 0 ? messages[i - 1] : null;
+                        final showDate = prev == null ||
+                            !_sameDay(message.createdAt, prev.createdAt);
+                        return Column(
+                          children: [
+                            if (showDate) _DateSeparator(date: message.createdAt),
+                            Align(
                           alignment: own
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
@@ -213,6 +219,8 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
                               ],
                             ),
                           ),
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -248,4 +256,44 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
       );
     },
   );
+}
+
+bool _sameDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
+
+String _dateLabel(DateTime date) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final that = DateTime(date.year, date.month, date.day);
+  final diff = today.difference(that).inDays;
+  if (diff == 0) return 'Today';
+  if (diff == 1) return 'Yesterday';
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+  return '${date.day} ${months[date.month - 1]} ${date.year}';
+}
+
+class _DateSeparator extends StatelessWidget {
+  final DateTime date;
+  const _DateSeparator({required this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        decoration: BoxDecoration(
+          color: TouristPalette.ice,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          _dateLabel(date),
+          style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700),
+        ),
+      ),
+    );
+  }
 }

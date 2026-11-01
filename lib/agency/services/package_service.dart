@@ -7,7 +7,7 @@ class PackageService {
   CollectionReference<Map<String, dynamic>> get _col =>
       _db.collection('packages');
 
-  // Live list of packages owned by agency
+  // Live list of agency's packages
   Stream<List<PackageModel>> myPackages(String agencyuserid) {
     return _col
         .where('agencyuserid', isEqualTo: agencyuserid)

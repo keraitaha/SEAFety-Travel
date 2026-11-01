@@ -33,6 +33,7 @@ migrate_working_dir/
 /build/
 /coverage/
 /test/
+/tools/
 seafety_travel.zip
 
 # Symbolication related
@@ -45,3 +46,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firestore export tool (keep credentials and exports out of version control)
+tools/firestore-export/serviceAccountKey.json
+tools/firestore-export/*serviceAccount*.json
+tools/firestore-export/firestore-export-*.json
+tools/firestore-export/node_modules/
+**/serviceAccountKey.json

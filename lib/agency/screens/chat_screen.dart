@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> _setFollowUp() async {
+  Future<void> _pickFollowUpDate() async {
     final now = DateTime.now();
     final date = await showDatePicker(
       context: context,
@@ -101,6 +101,45 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  Future<void> _removeFollowUp() async {
+    await _service.clearFollowUp(widget.conversation.conversationid);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Follow-up reminder removed.')),
+      );
+    }
+  }
+
+  Future<void> _followUp() async {
+    final hasFollowUp = widget.conversation.followupat != null;
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.event),
+              title: Text(hasFollowUp ? 'Change follow-up date' : 'Set follow-up date'),
+              onTap: () => Navigator.pop(ctx, 'set'),
+            ),
+            if (hasFollowUp)
+              ListTile(
+                leading: const Icon(Icons.alarm_off),
+                title: const Text('Remove follow-up'),
+                onTap: () => Navigator.pop(ctx, 'remove'),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (action == 'set') {
+      await _pickFollowUpDate();
+    } else if (action == 'remove') {
+      await _removeFollowUp();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,9 +147,15 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text(widget.conversation.touristdisplayname),
         actions: [
           IconButton(
-            icon: const Icon(Icons.alarm_add),
-            tooltip: 'Set follow-up',
-            onPressed: _setFollowUp,
+            icon: Icon(
+              widget.conversation.followupat != null
+                  ? Icons.alarm_on
+                  : Icons.alarm_add,
+            ),
+            tooltip: widget.conversation.followupat != null
+                ? 'Follow-up set'
+                : 'Set follow-up',
+            onPressed: _followUp,
           ),
           IconButton(
             icon: const Icon(Icons.flag),
@@ -143,7 +188,22 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, i) {
                     final m = messages[i];
                     final isMine = m.senderuserid == widget.currentUser.userid;
-                    return _MessageBubble(text: m.text, isMine: isMine);
+                    final date = m.sentat?.toDate();
+                    final prevDate = i > 0
+                        ? messages[i - 1].sentat?.toDate()
+                        : null;
+                    final showDate = date != null &&
+                        (prevDate == null || !_sameDay(date, prevDate));
+                    return Column(
+                      children: [
+                        if (showDate) _DateSeparator(date: date),
+                        _MessageBubble(
+                          text: m.text,
+                          isMine: isMine,
+                          sentat: date,
+                        ),
+                      ],
+                    );
                   },
                 );
               },
@@ -180,10 +240,55 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
+bool _sameDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
+
+String _dateLabel(DateTime date) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final that = DateTime(date.year, date.month, date.day);
+  final diff = today.difference(that).inDays;
+  if (diff == 0) return 'Today';
+  if (diff == 1) return 'Yesterday';
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+  return '${date.day} ${months[date.month - 1]} ${date.year}';
+}
+
+class _DateSeparator extends StatelessWidget {
+  final DateTime date;
+  const _DateSeparator({required this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.paleBlue,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          _dateLabel(date),
+          style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700),
+        ),
+      ),
+    );
+  }
+}
+
 class _MessageBubble extends StatelessWidget {
   final String text;
   final bool isMine;
-  const _MessageBubble({required this.text, required this.isMine});
+  final DateTime? sentat;
+  const _MessageBubble({
+    required this.text,
+    required this.isMine,
+    this.sentat,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -199,9 +304,24 @@ class _MessageBubble extends StatelessWidget {
           color: isMine ? AppColors.primaryBlue : AppColors.paleBlue,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          text,
-          style: TextStyle(color: isMine ? Colors.white : Colors.black87),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              text,
+              style: TextStyle(color: isMine ? Colors.white : Colors.black87),
+            ),
+            if (sentat != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                '${sentat!.hour.toString().padLeft(2, '0')}:${sentat!.minute.toString().padLeft(2, '0')}',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isMine ? Colors.white70 : Colors.blueGrey.shade600,
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );
