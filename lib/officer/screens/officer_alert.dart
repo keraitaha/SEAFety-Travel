@@ -284,13 +284,6 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
       ),
     );
  
-    title.dispose();
-    description.dispose();
-    sourceName.dispose();
-    sourceUrl.dispose();
-    latitude.dispose();
-    longitude.dispose();
-    radius.dispose();
   }
  
   Future<void> _delete(String id) async {
