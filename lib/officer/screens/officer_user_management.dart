@@ -240,7 +240,7 @@ class _OfficerUserManagementState
                           const SizedBox(height: 8),
 
                           DropdownButtonFormField<int>(
-                            value: OfficerFirebaseService
+                            initialValue: OfficerFirebaseService
                                     .validUserRoles
                                     .contains(currentRole)
                                 ? currentRole
@@ -313,3 +313,4 @@ class _OfficerUserManagementState
     );
   }
 }
+
