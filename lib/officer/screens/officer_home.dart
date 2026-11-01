@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
 import 'package:seafety_travel/shared/models/app_user.dart';
 import 'package:seafety_travel/shared/widgets/auth_gate.dart';
-
 import 'officer_dashboard.dart';
 import 'officer_destinations.dart';
 import 'officer_alert.dart';
 import 'officer_safety_map.dart';
 import 'officer_emergency_resources.dart';
 import 'officer_enquiries.dart';
+import 'officer_user_management.dart';
 
 class OfficerHome extends StatefulWidget {
   final AppUser currentUser;
@@ -28,6 +27,7 @@ class _OfficerHomeState extends State<OfficerHome> {
     const OfficerAlerts(),
     const OfficerSafetyMap(),
     const OfficerEmergencyResources(),
+    const OfficerUserManagement(),
   ];
 
   final List<String> _titles = [
@@ -36,6 +36,7 @@ class _OfficerHomeState extends State<OfficerHome> {
     'Safety Alerts',
     'Safety Map',
     'Emergency Resources',
+    'User Management',
   ];
 
   @override
@@ -58,7 +59,12 @@ class _OfficerHomeState extends State<OfficerHome> {
           const LogoutButton(),
         ],
       ),
-      body: IndexedStack(index: _selectedIndex, children: _screens),
+
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _screens,
+      ),
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
@@ -92,8 +98,15 @@ class _OfficerHomeState extends State<OfficerHome> {
             selectedIcon: Icon(Icons.emergency),
             label: 'Emergency',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.manage_accounts_outlined),
+            selectedIcon: Icon(Icons.manage_accounts),
+            label: 'Users',
+          ),
         ],
       ),
     );
   }
 }
+
+
