@@ -8,6 +8,7 @@ import 'officer_destinations.dart';
 import 'officer_alert.dart';
 import 'officer_safety_map.dart';
 import 'officer_emergency_resources.dart';
+import 'officer_enquiries.dart';
 
 class OfficerHome extends StatefulWidget {
   final AppUser currentUser;
@@ -42,7 +43,20 @@ class _OfficerHomeState extends State<OfficerHome> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_selectedIndex]),
-        actions: const [LogoutButton()],
+        actions: [
+          IconButton(
+            tooltip: 'Tourist enquiries',
+            icon: const Icon(Icons.chat_outlined),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) =>
+                    OfficerEnquiries(currentUser: widget.currentUser),
+              ),
+            ),
+          ),
+          const LogoutButton(),
+        ],
       ),
       body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: NavigationBar(

@@ -8,6 +8,7 @@ class Destination {
   final String sourceUrl;
   final String risk;
   final bool published;
+  final List<String> categories;
 
   const Destination({
     required this.id,
@@ -19,6 +20,7 @@ class Destination {
     this.sourceUrl = '',
     this.risk = 'Low',
     this.published = false,
+    this.categories = const [],
   });
 
   factory Destination.fromMap(String id, Map<String, dynamic> data) {
@@ -32,6 +34,7 @@ class Destination {
       sourceUrl: data['sourceUrl'] as String? ?? '',
       risk: data['risk'] as String? ?? 'Low',
       published: data['published'] as bool? ?? false,
+      categories: List<String>.from(data['categories'] ?? const []),
     );
   }
 
@@ -45,6 +48,7 @@ class Destination {
       'sourceUrl': sourceUrl,
       'risk': risk,
       'published': published,
+      'categories': categories,
     };
   }
 }

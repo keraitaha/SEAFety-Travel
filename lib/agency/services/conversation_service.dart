@@ -2,16 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seafety_travel/shared/models/conversation_model.dart';
 
 class ConversationService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  ConversationService({FirebaseFirestore? firestore})
+    : _db = firestore ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _col =>
       _db.collection('conversations');
 
   // Enquiries assigned to this agency
   Stream<List<ConversationModel>> agencyConversations(String staffuserid) {
+    return staffConversations(staffuserid, type: 'agency');
+  }
+
+  // The same participant/message contract is used by both staff roles.
+  Stream<List<ConversationModel>> staffConversations(
+    String staffuserid, {
+    required String type,
+  }) {
     return _col
         .where('staffuserid', isEqualTo: staffuserid)
-        .where('type', isEqualTo: 'agency')
+        .where('type', isEqualTo: type)
         .snapshots()
         .map(
           (snap) => snap.docs
@@ -63,6 +74,8 @@ class ConversationService {
 
   String statusLabel(String status) {
     switch (status) {
+      case 'open':
+        return 'Open';
       case 'in_progress':
         return 'In progress';
       case 'waiting_for_customer':

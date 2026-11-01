@@ -116,6 +116,9 @@ class OfficerDestinations extends StatelessWidget {
 
     String risk = existingData?['risk']?.toString() ?? 'Medium';
     bool published = existingData?['published'] == true;
+    final categories = Set<String>.from(
+      existingData?['categories'] ?? const [],
+    );
     bool saving = false;
 
     await showDialog<void>(
@@ -163,6 +166,29 @@ class OfficerDestinations extends StatelessWidget {
                           maxLines: 3,
                         ),
                         _textField(sourceController, 'Source URL (optional)'),
+                        const SizedBox(height: 12),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Destination interests'),
+                        ),
+                        Wrap(
+                          spacing: 8,
+                          children: ['Beach', 'Culture', 'Food', 'Nature']
+                              .map(
+                                (category) => FilterChip(
+                                  label: Text(category),
+                                  selected: categories.contains(category),
+                                  onSelected: (selected) => setDialogState(() {
+                                    if (selected) {
+                                      categories.add(category);
+                                    } else {
+                                      categories.remove(category);
+                                    }
+                                  }),
+                                ),
+                              )
+                              .toList(),
+                        ),
                         const SizedBox(height: 12),
                         DropdownButtonFormField<String>(
                           initialValue: risk,
@@ -229,6 +255,7 @@ class OfficerDestinations extends StatelessWidget {
                               'sourceUrl': sourceController.text.trim(),
                               'risk': risk,
                               'published': published,
+                              'categories': categories.toList(),
                               'lastUpdated': FieldValue.serverTimestamp(),
                             };
 

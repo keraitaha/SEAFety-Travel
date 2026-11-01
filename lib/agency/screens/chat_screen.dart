@@ -7,10 +7,12 @@ import '../services/conversation_service.dart';
 class ChatScreen extends StatefulWidget {
   final AppUser currentUser;
   final ConversationModel conversation;
+  final ConversationService? service;
   const ChatScreen({
     super.key,
     required this.currentUser,
     required this.conversation,
+    this.service,
   });
 
   @override
@@ -18,9 +20,15 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final ConversationService _service = ConversationService();
+  late final ConversationService _service;
   final _messageController = TextEditingController();
   bool _sending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _service = widget.service ?? ConversationService();
+  }
 
   @override
   void dispose() {
@@ -32,22 +40,28 @@ class _ChatScreenState extends State<ChatScreen> {
     final text = _messageController.text.trim();
     if (text.isEmpty) return;
     setState(() => _sending = true);
-    await _service.sendMessage(
-      conversationid: widget.conversation.conversationid,
-      senderuserid: widget.currentUser.userid,
-      text: text,
-    );
-    _messageController.clear();
-    if (mounted) setState(() => _sending = false);
+    try {
+      await _service.sendMessage(
+        conversationid: widget.conversation.conversationid,
+        senderuserid: widget.currentUser.userid,
+        text: text,
+      );
+      if (mounted) _messageController.clear();
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not send message. Please try again.'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
   }
 
   Future<void> _changeStatus() async {
-    const options = [
-      'new',
-      'in_progress',
-      'waiting_for_customer',
-      'confirmed',
-    ];
+    const options = ['new', 'in_progress', 'waiting_for_customer', 'confirmed'];
     final selected = await showModalBottomSheet<String>(
       context: context,
       builder: (ctx) => SafeArea(
@@ -65,10 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
     if (selected != null) {
-      await _service.updateStatus(
-        widget.conversation.conversationid,
-        selected,
-      );
+      await _service.updateStatus(widget.conversation.conversationid, selected);
     }
   }
 
@@ -118,9 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Could not load messages.'),
-                  );
+                  return const Center(child: Text('Could not load messages.'));
                 }
                 final messages = snapshot.data ?? [];
                 if (messages.isEmpty) {
@@ -133,8 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: messages.length,
                   itemBuilder: (context, i) {
                     final m = messages[i];
-                    final isMine =
-                        m.senderuserid == widget.currentUser.userid;
+                    final isMine = m.senderuserid == widget.currentUser.userid;
                     return _MessageBubble(text: m.text, isMine: isMine);
                   },
                 );
@@ -193,9 +201,7 @@ class _MessageBubble extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(
-            color: isMine ? Colors.white : Colors.black87,
-          ),
+          style: TextStyle(color: isMine ? Colors.white : Colors.black87),
         ),
       ),
     );

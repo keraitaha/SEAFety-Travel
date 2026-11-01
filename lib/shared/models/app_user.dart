@@ -58,8 +58,6 @@ class AppUser {
         return 'Travel Agency';
       case 2:
         return 'Tourism Officer';
-      case 3:
-        return 'Administrator';
       default:
         return 'Tourist';
     }

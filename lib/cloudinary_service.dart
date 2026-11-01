@@ -26,12 +26,9 @@ class CloudinaryService {
         // Return the secure HTTPS image URL from Cloudinary
         return jsonMap['secure_url'] as String?;
       } else {
-        final errorData = await response.stream.bytesToString();
-        print('Cloudinary upload failed (${response.statusCode}): $errorData');
         return null;
       }
     } catch (e) {
-      print('Error uploading to Cloudinary: $e');
       return null;
     }
   }

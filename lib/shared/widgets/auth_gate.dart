@@ -7,7 +7,6 @@ import '../auth/login_screen.dart';
 import 'package:seafety_travel/agency/screens/agency_home.dart';
 import 'package:seafety_travel/tourist/screens/tourist_home.dart';
 import 'package:seafety_travel/officer/screens/officer_home.dart';
-import 'package:seafety_travel/admin/screens/admin_home.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -55,8 +54,6 @@ class _RoleRouter extends StatelessWidget {
             return AgencyHome(currentUser: appUser);
           case 2:
             return OfficerHome(currentUser: appUser);
-          case 3:
-            return AdminHome(currentUser: appUser);
           default:
             return TouristHome(currentUser: appUser);
         }
