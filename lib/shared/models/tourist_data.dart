@@ -50,10 +50,8 @@ class Place {
     safetyLevel: '${data['risk'] ?? data['safetylevel'] ?? 'unknown'}',
     safetyInfo: '${data['safetyInformation'] ?? ''}',
     openingHours: '${data['openinghours'] ?? 'Check with the attraction'}',
-    visaInfo:
-        '${data['visaInformation'] ?? data['visainfo'] ?? 'Check official immigration guidance'}',
-    emergencyInfo:
-        '${data['emergencyinfo'] ?? 'Contact local emergency services'}',
+    visaInfo: '${data['visaInformation'] ?? data['visainfo'] ?? 'Check official immigration guidance'}',
+    emergencyInfo: '${data['emergencyinfo'] ?? 'Contact local emergency services'}',
     sourceUrl: '${data['sourceUrl'] ?? data['sourceurl'] ?? ''}',
     entranceFee: (data['entrancefee'] as num?)?.toDouble(),
   );
@@ -84,19 +82,18 @@ class TravelPackage {
     this.availability = 'available',
   });
 
-  factory TravelPackage.fromMap(String id, Map<String, dynamic> data) =>
-      TravelPackage(
-        id: id,
-        agencyUserId: '${data['agencyuserid'] ?? ''}',
-        destinationId: '${data['destinationid'] ?? ''}',
-        title: '${data['title'] ?? ''}',
-        description: '${data['description'] ?? ''}',
-        imageUrl: '${data['imageurl'] ?? ''}',
-        price: (data['price'] as num?)?.toDouble() ?? 0,
-        durationDays: (data['durationdays'] as num?)?.toInt() ?? 0,
-        inclusions: List<String>.from(data['inclusions'] ?? []),
-        availability: '${data['availability'] ?? 'available'}',
-      );
+  factory TravelPackage.fromMap(String id, Map<String, dynamic> data) => TravelPackage(
+    id: id,
+    agencyUserId: '${data['agencyuserid'] ?? ''}',
+    destinationId: '${data['destinationid'] ?? ''}',
+    title: '${data['title'] ?? ''}',
+    description: '${data['description'] ?? ''}',
+    imageUrl: '${data['imageurl'] ?? ''}',
+    price: (data['price'] as num?)?.toDouble() ?? 0,
+    durationDays: (data['durationdays'] as num?)?.toInt() ?? 0,
+    inclusions: List<String>.from(data['inclusions'] ?? []),
+    availability: '${data['availability'] ?? 'available'}',
+  );
 }
 
 class SafetyAlert {
@@ -128,11 +125,7 @@ class SafetyAlert {
     this.endDate,
   });
 
-  factory SafetyAlert.fromMap(
-    String id,
-    Map<String, dynamic> data,
-    DateTime? updatedAt,
-  ) => SafetyAlert(
+  factory SafetyAlert.fromMap(String id, Map<String, dynamic> data, DateTime? updatedAt) => SafetyAlert(
     id: id,
     destinationId: '${data['destinationid'] ?? ''}',
     country: '${data['country'] ?? ''}',
@@ -147,17 +140,14 @@ class SafetyAlert {
     endDate: _date(data['endDate']),
   );
 
-  bool get isCurrent =>
-      status.toLowerCase() == 'active' &&
-      (endDate == null || endDate!.isAfter(DateTime.now()));
+  bool get isCurrent => status.toLowerCase() == 'active' && (endDate == null || endDate!.isAfter(DateTime.now()));
 
   bool appliesTo(Place place) =>
       isCurrent &&
       ((destinationId.isNotEmpty && destinationId == place.id) ||
           (destinationId.isEmpty &&
               country.toLowerCase() == place.country.toLowerCase() &&
-              (region.isEmpty ||
-                  region.toLowerCase() == place.region.toLowerCase())));
+              (region.isEmpty || region.toLowerCase() == place.region.toLowerCase())));
 }
 
 class TravelReview {
@@ -165,12 +155,7 @@ class TravelReview {
   final String targetType;
   final int rating;
   final String comment;
-  const TravelReview({
-    required this.targetId,
-    required this.targetType,
-    required this.rating,
-    required this.comment,
-  });
+  const TravelReview({required this.targetId, required this.targetType, required this.rating, required this.comment});
 
   factory TravelReview.fromMap(Map<String, dynamic> data) => TravelReview(
     targetId: '${data['targetid'] ?? ''}',
@@ -281,24 +266,14 @@ class ChatThread {
   final String type;
   final String? packageId;
   final String status;
-  const ChatThread({
-    required this.id,
-    required this.staffId,
-    required this.type,
-    this.packageId,
-    this.status = 'new',
-  });
+  const ChatThread({required this.id, required this.staffId, required this.type, this.packageId, this.status = 'new'});
 }
 
 class ChatMessage {
   final String senderId;
   final String text;
   final DateTime createdAt;
-  const ChatMessage({
-    required this.senderId,
-    required this.text,
-    required this.createdAt,
-  });
+  const ChatMessage({required this.senderId, required this.text, required this.createdAt});
 }
 
 class TripMath {
@@ -314,11 +289,7 @@ class TripMath {
     if (trip.destinationId.isEmpty) return 'Select a destination.';
     final start = DateTime.tryParse(trip.startDate);
     final end = DateTime.tryParse(trip.endDate);
-    if (!validDate(trip.startDate) ||
-        !validDate(trip.endDate) ||
-        start == null ||
-        end == null ||
-        end.isBefore(start)) {
+    if (!validDate(trip.startDate) || !validDate(trip.endDate) || start == null || end == null || end.isBefore(start)) {
       return 'Choose valid dates in the correct order.';
     }
     if (!trip.budget.isFinite || trip.budget < 0) {
@@ -327,11 +298,7 @@ class TripMath {
     return null;
   }
 
-  static double total(
-    Trip trip,
-    List<TravelPackage> packages,
-    List<Activity> activities,
-  ) {
+  static double total(Trip trip, List<TravelPackage> packages, List<Activity> activities) {
     double result = 0;
     for (final id in trip.packageIds.toSet()) {
       for (final package in packages) {
@@ -351,4 +318,3 @@ class TripMath {
 }
 
 String money(num value) => 'RM ${value.toStringAsFixed(2)}';
-String shortDate(String iso) => iso.isEmpty ? 'Not set' : iso;

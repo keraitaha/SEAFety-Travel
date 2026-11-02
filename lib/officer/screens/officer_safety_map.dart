@@ -38,18 +38,14 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Safety zone added successfully.'),
-        ),
+        const SnackBar(content: Text('Safety zone added successfully.')),
       );
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not add safety zone: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Could not add safety zone: $e')));
     }
   }
 
@@ -88,19 +84,15 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Safety zone deleted.'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Safety zone deleted.')));
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not delete zone: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Could not delete zone: $e')));
     }
   }
 
@@ -110,15 +102,11 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
       stream: _service.watchZones(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return const Center(
-            child: Text('Could not load safety zones.'),
-          );
+          return const Center(child: Text('Could not load safety zones.'));
         }
 
         if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         final docs = snapshot.data!.docs;
@@ -143,18 +131,17 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
 
           final position = LatLng(lat, lng);
 
-          final radiusKm =
-          ((data['radius'] as num?)?.toDouble() ?? 2.0)
-              .clamp(0.1, 1000.0);
+          final radiusKm = ((data['radius'] as num?)?.toDouble() ?? 2.0).clamp(
+            0.1,
+            1000.0,
+          );
 
           markers.add(
             Marker(
               markerId: MarkerId(doc.id),
               position: position,
               icon: BitmapDescriptor.defaultMarkerWithHue(
-                isSafe
-                    ? BitmapDescriptor.hueGreen
-                    : BitmapDescriptor.hueRed,
+                isSafe ? BitmapDescriptor.hueGreen : BitmapDescriptor.hueRed,
               ),
               infoWindow: InfoWindow(
                 title: data['name'] ?? 'Safety zone',
@@ -183,15 +170,13 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Text(
-                      'Long-press the map to add a safety zone.',
-                    ),
+                    child: Text('Long-press the map to add a safety zone.'),
                   ),
                   DropdownButton<String>(
                     value: _country,
-                    items: OfficerFirebaseService
-                        .southeastAsianCountries
-                        .map((country) {
+                    items: OfficerFirebaseService.southeastAsianCountries.map((
+                      country,
+                    ) {
                       return DropdownMenuItem<String>(
                         value: country,
                         child: Text(country),
@@ -228,41 +213,33 @@ class _OfficerSafetyMapState extends State<OfficerSafetyMap> {
             SizedBox(
               height: 145,
               child: docs.isEmpty
-                  ? const Center(
-                child: Text('No safety zones yet.'),
-              )
+                  ? const Center(child: Text('No safety zones yet.'))
                   : ListView.builder(
-                itemCount: docs.length,
-                itemBuilder: (context, index) {
-                  final doc = docs[index];
-                  final data = doc.data();
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        final doc = docs[index];
+                        final data = doc.data();
 
-                  final isSafe = data['zoneType'] == 'Safe';
+                        final isSafe = data['zoneType'] == 'Safe';
 
-                  return ListTile(
-                    dense: true,
-                    leading: Icon(
-                      Icons.circle,
-                      color: isSafe
-                          ? Colors.green
-                          : Colors.red,
+                        return ListTile(
+                          dense: true,
+                          leading: Icon(
+                            Icons.circle,
+                            color: isSafe ? Colors.green : Colors.red,
+                          ),
+                          title: Text(data['name'] ?? 'Unnamed zone'),
+                          subtitle: Text(
+                            '${data['country'] ?? ''} • '
+                            '${data['zoneType'] ?? 'Unknown'}',
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () => _deleteZone(doc.id),
+                          ),
+                        );
+                      },
                     ),
-                    title: Text(
-                      data['name'] ?? 'Unnamed zone',
-                    ),
-                    subtitle: Text(
-                      '${data['country'] ?? ''} • '
-                          '${data['zoneType'] ?? 'Unknown'}',
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete_outline,
-                      ),
-                      onPressed: () => _deleteZone(doc.id),
-                    ),
-                  );
-                },
-              ),
             ),
           ],
         );
@@ -286,13 +263,10 @@ class AddSafetyZoneDialog extends StatefulWidget {
   });
 
   @override
-  State<AddSafetyZoneDialog> createState() =>
-      _AddSafetyZoneDialogState();
+  State<AddSafetyZoneDialog> createState() => _AddSafetyZoneDialogState();
 }
 
-class _AddSafetyZoneDialogState
-    extends State<AddSafetyZoneDialog> {
-
+class _AddSafetyZoneDialogState extends State<AddSafetyZoneDialog> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
@@ -326,9 +300,7 @@ class _AddSafetyZoneDialogState
       return;
     }
 
-    final radius = double.tryParse(
-      _radiusController.text.trim(),
-    );
+    final radius = double.tryParse(_radiusController.text.trim());
 
     if (radius == null || !radius.isFinite || radius <= 0) {
       return;
@@ -360,7 +332,6 @@ class _AddSafetyZoneDialogState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
                 // Zone name
                 TextFormField(
                   controller: _nameController,
@@ -369,8 +340,7 @@ class _AddSafetyZoneDialogState
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
-                    if (value == null ||
-                        value.trim().isEmpty) {
+                    if (value == null || value.trim().isEmpty) {
                       return 'Enter a zone name';
                     }
 
@@ -399,9 +369,7 @@ class _AddSafetyZoneDialogState
                     setState(() {
                       _zoneType = value;
 
-                      _risk = value == 'Safe'
-                          ? 'Low'
-                          : 'High';
+                      _risk = value == 'Safe' ? 'Low' : 'High';
                     });
                   },
                 ),
@@ -415,12 +383,7 @@ class _AddSafetyZoneDialogState
                     labelText: 'Risk level',
                     border: OutlineInputBorder(),
                   ),
-                  items: [
-                    'Low',
-                    'Medium',
-                    'High',
-                    'Critical',
-                  ].map((value) {
+                  items: ['Low', 'Medium', 'High', 'Critical'].map((value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -444,9 +407,9 @@ class _AddSafetyZoneDialogState
                     labelText: 'Country',
                     border: OutlineInputBorder(),
                   ),
-                  items: OfficerFirebaseService
-                      .southeastAsianCountries
-                      .map((country) {
+                  items: OfficerFirebaseService.southeastAsianCountries.map((
+                    country,
+                  ) {
                     return DropdownMenuItem<String>(
                       value: country,
                       child: Text(country),
@@ -482,18 +445,13 @@ class _AddSafetyZoneDialogState
                     labelText: 'Radius (km)',
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType:
-                  const TextInputType.numberWithOptions(
+                  keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
                   validator: (value) {
-                    final radius = double.tryParse(
-                      value ?? '',
-                    );
+                    final radius = double.tryParse(value ?? '');
 
-                    if (radius == null ||
-                        !radius.isFinite ||
-                        radius <= 0) {
+                    if (radius == null || !radius.isFinite || radius <= 0) {
                       return 'Enter a valid radius greater than zero';
                     }
 
@@ -516,21 +474,19 @@ class _AddSafetyZoneDialogState
                     children: [
                       const Text(
                         'Selected Location',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 6),
 
                       Text(
                         'Latitude: '
-                            '${widget.position.latitude.toStringAsFixed(5)}',
+                        '${widget.position.latitude.toStringAsFixed(5)}',
                       ),
 
                       Text(
                         'Longitude: '
-                            '${widget.position.longitude.toStringAsFixed(5)}',
+                        '${widget.position.longitude.toStringAsFixed(5)}',
                       ),
                     ],
                   ),
@@ -549,10 +505,7 @@ class _AddSafetyZoneDialogState
           child: const Text('Cancel'),
         ),
 
-        FilledButton(
-          onPressed: _saveZone,
-          child: const Text('Save Zone'),
-        ),
+        FilledButton(onPressed: _saveZone, child: const Text('Save Zone')),
       ],
     );
   }

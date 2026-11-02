@@ -41,10 +41,7 @@ class EnquiriesScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ChatScreen(
-                        currentUser: currentUser,
-                        conversation: c,
-                      ),
+                      builder: (_) => ChatScreen(currentUser: currentUser, conversation: c),
                     ),
                   );
                 },

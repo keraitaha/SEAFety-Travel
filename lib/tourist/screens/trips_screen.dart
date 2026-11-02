@@ -11,17 +11,13 @@ class TripsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final trips = [...store.trips]
-      ..sort((a, b) => a.startDate.compareTo(b.startDate));
+    final trips = [...store.trips]..sort((a, b) => a.startDate.compareTo(b.startDate));
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         Container(
           padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: TouristPalette.ice,
-            borderRadius: BorderRadius.circular(18),
-          ),
+          decoration: BoxDecoration(color: TouristPalette.ice, borderRadius: BorderRadius.circular(18)),
           child: const Row(
             children: [
               Icon(Icons.luggage, color: TouristPalette.navy, size: 32),
@@ -29,11 +25,7 @@ class TripsScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Your journey, organized.\nPlan the trip. Know the cost.',
-                  style: TextStyle(
-                    color: TouristPalette.navy,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(color: TouristPalette.navy, fontSize: 17, fontWeight: FontWeight.w800),
                 ),
               ),
             ],
@@ -55,11 +47,7 @@ class TripsScreen extends StatelessWidget {
           ),
         ...trips.map((trip) {
           final place = store.placeById(trip.destinationId);
-          final total = TripMath.total(
-            trip,
-            store.packages,
-            store.activities[trip.id] ?? [],
-          );
+          final total = TripMath.total(trip, store.packages, store.activities[trip.id] ?? []);
           return InfoCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,20 +57,13 @@ class TripsScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         trip.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: TouristPalette.navy,
-                        ),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: TouristPalette.navy),
                       ),
                     ),
                     Chip(label: Text(trip.status)),
                   ],
                 ),
-                Text(
-                  place?.name ?? 'Destination unavailable',
-                  style: TextStyle(color: Colors.blueGrey.shade600),
-                ),
+                Text(place?.name ?? 'Destination unavailable', style: TextStyle(color: Colors.blueGrey.shade600)),
                 const SizedBox(height: 10),
                 LabelValue(
                   icon: Icons.date_range,
@@ -97,30 +78,20 @@ class TripsScreen extends StatelessWidget {
                 if (total > trip.budget)
                   const Text(
                     'Estimated cost exceeds your budget.',
-                    style: TextStyle(
-                      color: Colors.deepOrange,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w700),
                   ),
                 const Divider(),
                 Wrap(
                   alignment: WrapAlignment.end,
                   spacing: 4,
                   children: [
-                    TextButton(
-                      onPressed: () => _edit(context, trip),
-                      child: const Text('Edit'),
-                    ),
-                    TextButton(
-                      onPressed: () => _delete(context, trip),
-                      child: const Text('Delete'),
-                    ),
+                    TextButton(onPressed: () => _edit(context, trip), child: const Text('Edit')),
+                    TextButton(onPressed: () => _delete(context, trip), child: const Text('Delete')),
                     FilledButton.tonal(
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              TripDetailScreen(store: store, tripId: trip.id),
+                          builder: (_) => TripDetailScreen(store: store, tripId: trip.id),
                         ),
                       ),
                       child: const Text('Open trip'),
@@ -138,8 +109,7 @@ class TripsScreen extends StatelessWidget {
   Future<void> _edit(BuildContext context, [Trip? trip]) async {
     final saved = await showDialog<Trip>(
       context: context,
-      builder: (_) =>
-          TripFormDialog(existing: trip, places: store.destinations),
+      builder: (_) => TripFormDialog(existing: trip, places: store.destinations),
     );
     if (saved == null) return;
     try {
@@ -157,14 +127,8 @@ class TripsScreen extends StatelessWidget {
         title: const Text('Delete trip?'),
         content: Text('Remove ${trip.title} and all its itinerary activities?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
         ],
       ),
     );

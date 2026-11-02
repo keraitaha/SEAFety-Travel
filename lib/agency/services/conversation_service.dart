@@ -4,31 +4,21 @@ import 'package:seafety_travel/shared/models/conversation_model.dart';
 class ConversationService {
   final FirebaseFirestore _db;
 
-  ConversationService({FirebaseFirestore? firestore})
-    : _db = firestore ?? FirebaseFirestore.instance;
+  ConversationService({FirebaseFirestore? firestore}) : _db = firestore ?? FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> get _col =>
-      _db.collection('conversations');
+  CollectionReference<Map<String, dynamic>> get _col => _db.collection('conversations');
 
-  // Enquiries assigned to this agency
+  // Live list of enquiries for this agency
   Stream<List<ConversationModel>> agencyConversations(String staffuserid) {
     return staffConversations(staffuserid, type: 'agency');
   }
 
-  // The same participant/message contract is used by both staff roles.
-  Stream<List<ConversationModel>> staffConversations(
-    String staffuserid, {
-    required String type,
-  }) {
+  Stream<List<ConversationModel>> staffConversations(String staffuserid, {required String type}) {
     return _col
         .where('staffuserid', isEqualTo: staffuserid)
         .where('type', isEqualTo: type)
         .snapshots()
-        .map(
-          (snap) => snap.docs
-              .map((d) => ConversationModel.fromMap(d.id, d.data()))
-              .toList(),
-        );
+        .map((snap) => snap.docs.map((d) => ConversationModel.fromMap(d.id, d.data())).toList());
   }
 
   Stream<List<MessageModel>> messages(String conversationid) {
@@ -37,18 +27,10 @@ class ConversationService {
         .collection('messages')
         .orderBy('sentat', descending: false)
         .snapshots()
-        .map(
-          (snap) => snap.docs
-              .map((d) => MessageModel.fromMap(d.id, d.data()))
-              .toList(),
-        );
+        .map((snap) => snap.docs.map((d) => MessageModel.fromMap(d.id, d.data())).toList());
   }
 
-  Future<void> sendMessage({
-    required String conversationid,
-    required String senderuserid,
-    required String text,
-  }) async {
+  Future<void> sendMessage({required String conversationid, required String senderuserid, required String text}) async {
     final now = Timestamp.now();
     await _col.doc(conversationid).collection('messages').add({
       'senderuserid': senderuserid,
@@ -63,9 +45,7 @@ class ConversationService {
   }
 
   Future<void> setFollowUp(String conversationid, DateTime when) async {
-    await _col.doc(conversationid).update({
-      'followupat': Timestamp.fromDate(when),
-    });
+    await _col.doc(conversationid).update({'followupat': Timestamp.fromDate(when)});
   }
 
   Future<void> clearFollowUp(String conversationid) async {

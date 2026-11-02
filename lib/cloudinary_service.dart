@@ -6,7 +6,7 @@ class CloudinaryService {
   static const String cloudName = 'p6kdvmgo';
   static const String uploadPreset = 'seafety_travel';
 
-  /// Uploads an image file to Cloudinary and returns the public secure URL.
+  // Uploads an image file to Cloudinary and returns the public secure URL
   static Future<String?> uploadImage(File imageFile) async {
     final url = Uri.parse(
       'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
@@ -28,7 +28,7 @@ class CloudinaryService {
       } else {
         return null;
       }
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }

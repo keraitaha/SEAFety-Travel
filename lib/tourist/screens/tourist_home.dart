@@ -12,12 +12,7 @@ class TouristHome extends StatefulWidget {
   final AppUser currentUser;
   final TouristStore? store;
   final bool preview;
-  const TouristHome({
-    super.key,
-    required this.currentUser,
-    this.store,
-    this.preview = false,
-  });
+  const TouristHome({super.key, required this.currentUser, this.store, this.preview = false});
 
   @override
   State<TouristHome> createState() => _TouristHomeState();
@@ -33,11 +28,7 @@ class _TouristHomeState extends State<TouristHome> {
     super.initState();
     ownsStore = widget.store == null;
     store =
-        widget.store ??
-        FirestoreTouristStore(
-          userId: widget.currentUser.userid,
-          userName: widget.currentUser.fullName,
-        );
+        widget.store ?? FirestoreTouristStore(userId: widget.currentUser.userid, userName: widget.currentUser.fullName);
     store.start().catchError((Object error) {
       store.loadError = shortError(error);
       store.loading = false;
@@ -56,11 +47,7 @@ class _TouristHomeState extends State<TouristHome> {
     return AnimatedBuilder(
       animation: store,
       builder: (context, child) {
-        final pages = [
-          ExploreScreen(store: store),
-          TripsScreen(store: store),
-          TouristInboxScreen(store: store),
-        ];
+        final pages = [ExploreScreen(store: store), TripsScreen(store: store), TouristInboxScreen(store: store)];
         return Scaffold(
           backgroundColor: TouristPalette.background,
           appBar: AppBar(
@@ -70,13 +57,7 @@ class _TouristHomeState extends State<TouristHome> {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Center(
-                    child: Text(
-                      'DEMO',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: Text('DEMO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   ),
                 ),
               if (!widget.preview) const LogoutButton(),
@@ -97,11 +78,7 @@ class _TouristHomeState extends State<TouristHome> {
                     ),
                   ],
                 ),
-              Expanded(
-                child: store.loading
-                    ? const Center(child: CircularProgressIndicator())
-                    : pages[tab],
-              ),
+              Expanded(child: store.loading ? const Center(child: CircularProgressIndicator()) : pages[tab]),
             ],
           ),
           bottomNavigationBar: NavigationBar(

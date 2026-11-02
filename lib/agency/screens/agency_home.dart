@@ -28,24 +28,15 @@ class _AgencyHomeState extends State<AgencyHome> {
     final titles = ['My Packages', 'Destinations', 'Bookings', 'Enquiries'];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(titles[_index]),
-        actions: [const LogoutButton()],
-      ),
+      appBar: AppBar(title: Text(titles[_index]), actions: [const LogoutButton()]),
       body: pages[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (value) => setState(() => _index = value),
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.card_travel),
-            label: 'Packages',
-          ),
+          NavigationDestination(icon: Icon(Icons.card_travel), label: 'Packages'),
           NavigationDestination(icon: Icon(Icons.place), label: 'Destinations'),
-          NavigationDestination(
-            icon: Icon(Icons.book_online),
-            label: 'Bookings',
-          ),
+          NavigationDestination(icon: Icon(Icons.book_online), label: 'Bookings'),
           NavigationDestination(icon: Icon(Icons.chat), label: 'Enquiries'),
         ],
       ),

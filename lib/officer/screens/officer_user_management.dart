@@ -7,14 +7,11 @@ class OfficerUserManagement extends StatefulWidget {
   const OfficerUserManagement({super.key});
 
   @override
-  State<OfficerUserManagement> createState() =>
-      _OfficerUserManagementState();
+  State<OfficerUserManagement> createState() => _OfficerUserManagementState();
 }
 
-class _OfficerUserManagementState
-    extends State<OfficerUserManagement> {
-  final OfficerFirebaseService _service =
-      OfficerFirebaseService();
+class _OfficerUserManagementState extends State<OfficerUserManagement> {
+  final OfficerFirebaseService _service = OfficerFirebaseService();
 
   String _searchQuery = '';
 
@@ -37,13 +34,11 @@ class _OfficerUserManagementState
         ),
         actions: [
           TextButton(
-            onPressed: () =>
-                Navigator.pop(dialogContext, false),
+            onPressed: () => Navigator.pop(dialogContext, false),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () =>
-                Navigator.pop(dialogContext, true),
+            onPressed: () => Navigator.pop(dialogContext, true),
             child: const Text('Confirm'),
           ),
         ],
@@ -53,10 +48,7 @@ class _OfficerUserManagementState
     if (confirmed != true || !mounted) return;
 
     try {
-      await _service.updateUserRole(
-        userId: userId,
-        newRole: newRole,
-      );
+      await _service.updateUserRole(userId: userId, newRole: newRole);
 
       if (!mounted) return;
 
@@ -71,11 +63,9 @@ class _OfficerUserManagementState
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to update role: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to update role: $e')));
     }
   }
 
@@ -100,21 +90,15 @@ class _OfficerUserManagementState
         ),
 
         Expanded(
-          child: StreamBuilder<
-              QuerySnapshot<Map<String, dynamic>>>(
+          child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: _service.watchUsers(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Unable to load users.'),
-                );
+                return const Center(child: Text('Unable to load users.'));
               }
 
-              if (snapshot.connectionState ==
-                  ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
               }
 
               final users = snapshot.data?.docs ?? [];
@@ -122,78 +106,59 @@ class _OfficerUserManagementState
               final filteredUsers = users.where((document) {
                 final data = document.data();
 
-                final firstName =
-                    (data['firstname'] ?? '').toString();
+                final firstName = (data['firstname'] ?? '').toString();
 
-                final lastName =
-                    (data['lastname'] ?? '').toString();
+                final lastName = (data['lastname'] ?? '').toString();
 
-                final email =
-                    (data['email'] ?? '').toString();
+                final email = (data['email'] ?? '').toString();
 
-                final fullName =
-                    '$firstName $lastName'.toLowerCase();
+                final fullName = '$firstName $lastName'.toLowerCase();
 
                 return fullName.contains(_searchQuery) ||
                     email.toLowerCase().contains(_searchQuery);
               }).toList();
 
               if (filteredUsers.isEmpty) {
-                return const Center(
-                  child: Text('No users found.'),
-                );
+                return const Center(child: Text('No users found.'));
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: filteredUsers.length,
                 itemBuilder: (context, index) {
                   final document = filteredUsers[index];
                   final data = document.data();
 
-                  final firstName =
-                      (data['firstname'] ?? '').toString();
+                  final firstName = (data['firstname'] ?? '').toString();
 
-                  final lastName =
-                      (data['lastname'] ?? '').toString();
+                  final lastName = (data['lastname'] ?? '').toString();
 
-                  final email =
-                      (data['email'] ?? 'No email').toString();
+                  final email = (data['email'] ?? 'No email').toString();
 
-                  final country =
-                      (data['country'] ?? 'Unknown').toString();
+                  final country = (data['country'] ?? 'Unknown').toString();
 
                   final rawRole = data['role'];
 
-                  final currentRole = rawRole is num
-                      ? rawRole.toInt()
-                      : -1;
+                  final currentRole = rawRole is num ? rawRole.toInt() : -1;
 
-                  final userName =
-                      '$firstName $lastName'.trim().isEmpty
-                          ? email
-                          : '$firstName $lastName'.trim();
+                  final userName = '$firstName $lastName'.trim().isEmpty
+                      ? email
+                      : '$firstName $lastName'.trim();
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              const CircleAvatar(
-                                child: Icon(Icons.person),
-                              ),
+                              const CircleAvatar(child: Icon(Icons.person)),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       userName,
@@ -205,9 +170,7 @@ class _OfficerUserManagementState
                                     const SizedBox(height: 4),
                                     Text(
                                       email,
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                      ),
+                                      style: const TextStyle(fontSize: 13),
                                     ),
                                   ],
                                 ),
@@ -223,26 +186,23 @@ class _OfficerUserManagementState
 
                           _infoRow(
                             'Current Role',
-                            OfficerFirebaseService.getRoleName(
-                              currentRole,
-                            ),
+                            OfficerFirebaseService.getRoleName(currentRole),
                           ),
 
                           const SizedBox(height: 16),
 
                           const Text(
                             'Change User Role',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
 
                           const SizedBox(height: 8),
 
                           DropdownButtonFormField<int>(
-                            initialValue: OfficerFirebaseService
-                                    .validUserRoles
-                                    .contains(currentRole)
+                            initialValue:
+                                OfficerFirebaseService.validUserRoles.contains(
+                                  currentRole,
+                                )
                                 ? currentRole
                                 : null,
                             decoration: const InputDecoration(
@@ -297,20 +257,9 @@ class _OfficerUserManagementState
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Flexible(
-          child: Text(
-            value,
-            textAlign: TextAlign.end,
-          ),
-        ),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+        Flexible(child: Text(value, textAlign: TextAlign.end)),
       ],
     );
   }
 }
-

@@ -23,14 +23,9 @@ class SectionTitle extends StatelessWidget {
       children: [
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 19,
-            fontWeight: FontWeight.w800,
-            color: TouristPalette.navy,
-          ),
+          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: TouristPalette.navy),
         ),
-        if (subtitle != null)
-          Text(subtitle!, style: TextStyle(color: Colors.blueGrey.shade600)),
+        if (subtitle != null) Text(subtitle!, style: TextStyle(color: Colors.blueGrey.shade600)),
       ],
     ),
   );
@@ -48,13 +43,7 @@ class InfoCard extends StatelessWidget {
       color: Colors.white,
       border: Border.all(color: const Color(0xFFDCE9F2)),
       borderRadius: BorderRadius.circular(18),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x0B143D6A),
-          blurRadius: 14,
-          offset: Offset(0, 5),
-        ),
-      ],
+      boxShadow: const [BoxShadow(color: Color(0x0B143D6A), blurRadius: 14, offset: Offset(0, 5))],
     ),
     child: Material(type: MaterialType.transparency, child: child),
   );
@@ -64,12 +53,7 @@ class DestinationArt extends StatelessWidget {
   final String imageUrl;
   final double height;
   final IconData icon;
-  const DestinationArt({
-    super.key,
-    required this.imageUrl,
-    this.height = 140,
-    this.icon = Icons.landscape_outlined,
-  });
+  const DestinationArt({super.key, required this.imageUrl, this.height = 140, this.icon = Icons.landscape_outlined});
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +68,7 @@ class DestinationArt extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      TouristPalette.navy,
-                      TouristPalette.blue,
-                      TouristPalette.aqua,
-                    ],
+                    colors: [TouristPalette.navy, TouristPalette.blue, TouristPalette.aqua],
                   ),
                 ),
                 child: Stack(
@@ -96,11 +76,7 @@ class DestinationArt extends StatelessWidget {
                     Positioned(
                       right: -18,
                       top: -25,
-                      child: Icon(
-                        Icons.circle_outlined,
-                        color: Colors.white.withValues(alpha: 0.14),
-                        size: 150,
-                      ),
+                      child: Icon(Icons.circle_outlined, color: Colors.white.withValues(alpha: 0.14), size: 150),
                     ),
                     Center(child: Icon(icon, color: Colors.white, size: 58)),
                   ],
@@ -111,13 +87,7 @@ class DestinationArt extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => const ColoredBox(
                   color: TouristPalette.ice,
-                  child: Center(
-                    child: Icon(
-                      Icons.image_not_supported_outlined,
-                      color: TouristPalette.navy,
-                      size: 36,
-                    ),
-                  ),
+                  child: Center(child: Icon(Icons.image_not_supported_outlined, color: TouristPalette.navy, size: 36)),
                 ),
               ),
       ),
@@ -155,12 +125,7 @@ class LabelValue extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const LabelValue({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  const LabelValue({super.key, required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -174,10 +139,7 @@ class LabelValue extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: TextStyle(color: Colors.blueGrey.shade600, fontSize: 12),
-              ),
+              Text(label, style: TextStyle(color: Colors.blueGrey.shade600, fontSize: 12)),
               const SizedBox(height: 2),
               Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
             ],
@@ -190,9 +152,7 @@ class LabelValue extends StatelessWidget {
 
 void showNotice(BuildContext context, String message) {
   if (!context.mounted) return;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
-  );
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), behavior: SnackBarBehavior.floating));
 }
 
 String shortError(Object error) {
@@ -206,11 +166,7 @@ Widget wideAction(String label, VoidCallback? onPressed, {IconData? icon}) {
     width: double.infinity,
     child: icon == null
         ? ElevatedButton(onPressed: onPressed, child: Text(label))
-        : ElevatedButton.icon(
-            onPressed: onPressed,
-            icon: Icon(icon),
-            label: Text(label),
-          ),
+        : ElevatedButton.icon(onPressed: onPressed, icon: Icon(icon), label: Text(label)),
   );
 }
 

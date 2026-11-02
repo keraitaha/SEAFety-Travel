@@ -4,11 +4,8 @@ import 'package:seafety_travel/shared/models/tourist_data.dart';
 import 'tourist_store.dart';
 
 class FirestoreTouristStore extends TouristStore {
-  FirestoreTouristStore({
-    required super.userId,
-    required super.userName,
-    FirebaseFirestore? firestore,
-  }) : _db = firestore ?? FirebaseFirestore.instance;
+  FirestoreTouristStore({required super.userId, required super.userName, FirebaseFirestore? firestore})
+    : _db = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _db;
   final List<StreamSubscription<dynamic>> _subscriptions = [];
@@ -23,36 +20,22 @@ class FirestoreTouristStore extends TouristStore {
   @override
   Future<void> start() async {
     _subscriptions.add(
-      _db
-          .collection('destinations')
-          .where('published', isEqualTo: true)
-          .snapshots()
-          .listen((result) {
-            destinations
-              ..clear()
-              ..addAll(
-                result.docs.map((doc) => Place.fromMap(doc.id, doc.data())),
-              );
-            loading = false;
-            changed();
-          }, onError: _failed),
+      _db.collection('destinations').where('published', isEqualTo: true).snapshots().listen((result) {
+        destinations
+          ..clear()
+          ..addAll(result.docs.map((doc) => Place.fromMap(doc.id, doc.data())));
+        loading = false;
+        changed();
+      }, onError: _failed),
     );
     _subscriptions.add(
-      _db
-          .collection('packages')
-          .where('published', isEqualTo: true)
-          .snapshots()
-          .listen((result) {
-            packages
-              ..clear()
-              ..addAll(
-                result.docs.map(
-                  (doc) => TravelPackage.fromMap(doc.id, doc.data()),
-                ),
-              );
-            loading = false;
-            changed();
-          }, onError: _failed),
+      _db.collection('packages').where('published', isEqualTo: true).snapshots().listen((result) {
+        packages
+          ..clear()
+          ..addAll(result.docs.map((doc) => TravelPackage.fromMap(doc.id, doc.data())));
+        loading = false;
+        changed();
+      }, onError: _failed),
     );
     _subscriptions.add(
       _db.collection('safety_alerts').snapshots().listen((result) {
@@ -61,11 +44,7 @@ class FirestoreTouristStore extends TouristStore {
           ..addAll(
             result.docs.map((doc) {
               final data = doc.data();
-              return SafetyAlert.fromMap(
-                doc.id,
-                data,
-                (data['updatetime'] as Timestamp?)?.toDate(),
-              );
+              return SafetyAlert.fromMap(doc.id, data, (data['updatetime'] as Timestamp?)?.toDate());
             }),
           );
         changed();
@@ -80,52 +59,36 @@ class FirestoreTouristStore extends TouristStore {
       }, onError: _failed),
     );
     _subscriptions.add(
-      _db
-          .collection('trips')
-          .where('userid', isEqualTo: userId)
-          .snapshots()
-          .listen((result) {
-            trips
-              ..clear()
-              ..addAll(
-                result.docs.map((doc) => Trip.fromMap(doc.id, doc.data())),
-              );
-            for (final trip in trips) {
-              loadActivities(
-                trip.id,
-              ).catchError((Object error) => _failed(error));
-            }
-            changed();
-          }, onError: _failed),
+      _db.collection('trips').where('userid', isEqualTo: userId).snapshots().listen((result) {
+        trips
+          ..clear()
+          ..addAll(result.docs.map((doc) => Trip.fromMap(doc.id, doc.data())));
+        for (final trip in trips) {
+          loadActivities(trip.id).catchError((Object error) => _failed(error));
+        }
+        changed();
+      }, onError: _failed),
     );
     _subscriptions.add(
-      _db
-          .collection('conversations')
-          .where('touristuserid', isEqualTo: userId)
-          .snapshots()
-          .listen((result) {
-            threads
-              ..clear()
-              ..addAll(
-                result.docs.map(
-                  (doc) => ChatThread(
-                    id: doc.id,
-                    staffId: '${doc.data()['staffuserid'] ?? ''}',
-                    type: '${doc.data()['type'] ?? 'agency'}',
-                    packageId: doc.data()['packageid'] as String?,
-                    status: '${doc.data()['status'] ?? 'new'}',
-                  ),
-                ),
-              );
-            changed();
-          }, onError: _failed),
+      _db.collection('conversations').where('touristuserid', isEqualTo: userId).snapshots().listen((result) {
+        threads
+          ..clear()
+          ..addAll(
+            result.docs.map(
+              (doc) => ChatThread(
+                id: doc.id,
+                staffId: '${doc.data()['staffuserid'] ?? ''}',
+                type: '${doc.data()['type'] ?? 'agency'}',
+                packageId: doc.data()['packageid'] as String?,
+                status: '${doc.data()['status'] ?? 'new'}',
+              ),
+            ),
+          );
+        changed();
+      }, onError: _failed),
     );
     try {
-      final staff = await _db
-          .collection('users')
-          .where('role', isEqualTo: 2)
-          .limit(1)
-          .get();
+      final staff = await _db.collection('users').where('role', isEqualTo: 2).limit(1).get();
       if (staff.docs.isNotEmpty) officerId = staff.docs.first.id;
       changed();
     } catch (_) {
@@ -138,10 +101,7 @@ class FirestoreTouristStore extends TouristStore {
     if (trip.id.isNotEmpty) await loadActivities(trip.id);
     final error = validatePlan(trip);
     if (error != null) throw FormatException(error);
-    final data = {
-      ...trip.toMap(userId),
-      'updatetime': FieldValue.serverTimestamp(),
-    };
+    final data = {...trip.toMap(userId), 'updatetime': FieldValue.serverTimestamp()};
     if (trip.id.isEmpty) {
       data['createtime'] = FieldValue.serverTimestamp();
       await _db.collection('trips').add(data);
@@ -164,14 +124,8 @@ class FirestoreTouristStore extends TouristStore {
 
   @override
   Future<void> loadActivities(String tripId) async {
-    final result = await _db
-        .collection('trips')
-        .doc(tripId)
-        .collection('itineraryitems')
-        .get();
-    activities[tripId] = result.docs
-        .map((doc) => Activity.fromMap(doc.id, doc.data()))
-        .toList();
+    final result = await _db.collection('trips').doc(tripId).collection('itineraryitems').get();
+    activities[tripId] = result.docs.map((doc) => Activity.fromMap(doc.id, doc.data())).toList();
     changed();
   }
 
@@ -185,14 +139,9 @@ class FirestoreTouristStore extends TouristStore {
         !TripMath.validDate(item.date) ||
         item.date.compareTo(trip.startDate) < 0 ||
         item.date.compareTo(trip.endDate) > 0) {
-      throw const FormatException(
-        'Enter a name, valid trip date and non-negative cost.',
-      );
+      throw const FormatException('Enter a name, valid trip date and non-negative cost.');
     }
-    final collection = _db
-        .collection('trips')
-        .doc(tripId)
-        .collection('itineraryitems');
+    final collection = _db.collection('trips').doc(tripId).collection('itineraryitems');
     if (item.id.isEmpty) {
       await collection.add(item.toMap());
     } else {
@@ -203,12 +152,7 @@ class FirestoreTouristStore extends TouristStore {
 
   @override
   Future<void> deleteActivity(String tripId, String activityId) async {
-    await _db
-        .collection('trips')
-        .doc(tripId)
-        .collection('itineraryitems')
-        .doc(activityId)
-        .delete();
+    await _db.collection('trips').doc(tripId).collection('itineraryitems').doc(activityId).delete();
     await loadActivities(tripId);
   }
 
@@ -235,16 +179,10 @@ class FirestoreTouristStore extends TouristStore {
   }
 
   @override
-  Future<ChatThread> openConversation({
-    required String staffId,
-    required String type,
-    String? packageId,
-  }) async {
+  Future<ChatThread> openConversation({required String staffId, required String type, String? packageId}) async {
     if (staffId.isEmpty) throw StateError('No staff member available.');
     for (final thread in threads) {
-      if (thread.staffId == staffId &&
-          thread.type == type &&
-          thread.packageId == packageId) {
+      if (thread.staffId == staffId && thread.type == type && thread.packageId == packageId) {
         return thread;
       }
     }
@@ -260,12 +198,7 @@ class FirestoreTouristStore extends TouristStore {
       'createtime': now,
       'lastmessageat': now,
     });
-    return ChatThread(
-      id: created.id,
-      staffId: staffId,
-      type: type,
-      packageId: packageId,
-    );
+    return ChatThread(id: created.id, staffId: staffId, type: type, packageId: packageId);
   }
 
   @override
@@ -283,9 +216,7 @@ class FirestoreTouristStore extends TouristStore {
                 (doc) => ChatMessage(
                   senderId: '${doc.data()['senderuserid'] ?? ''}',
                   text: '${doc.data()['text'] ?? ''}',
-                  createdAt:
-                      (doc.data()['sentat'] as Timestamp?)?.toDate() ??
-                      DateTime.now(),
+                  createdAt: (doc.data()['sentat'] as Timestamp?)?.toDate() ?? DateTime.now(),
                 ),
               )
               .toList();
@@ -299,11 +230,7 @@ class FirestoreTouristStore extends TouristStore {
     if (message.trim().isEmpty) return;
     final now = Timestamp.now();
     final doc = _db.collection('conversations').doc(threadId);
-    await doc.collection('messages').add({
-      'senderuserid': userId,
-      'text': message.trim(),
-      'sentat': now,
-    });
+    await doc.collection('messages').add({'senderuserid': userId, 'text': message.trim(), 'sentat': now});
     await doc.update({'lastmessageat': now});
   }
 

@@ -10,16 +10,6 @@ class DestinationService {
         .collection('destinations')
         .where('published', isEqualTo: true)
         .snapshots()
-        .map(
-          (snap) => snap.docs
-              .map((d) => DestinationModel.fromMap(d.id, d.data()))
-              .toList(),
-        );
-  }
-
-  Future<DestinationModel?> getDestination(String destinationid) async {
-    final doc = await _db.collection('destinations').doc(destinationid).get();
-    if (!doc.exists) return null;
-    return DestinationModel.fromMap(doc.id, doc.data()!);
+        .map((snap) => snap.docs.map((d) => DestinationModel.fromMap(d.id, d.data())).toList());
   }
 }

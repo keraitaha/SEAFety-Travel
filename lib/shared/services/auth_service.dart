@@ -11,10 +11,7 @@ class AuthService {
 
   Future<String?> signIn(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: email.trim(),
-        password: password,
-      );
+      await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
       return null;
     } on FirebaseAuthException catch (e) {
       return _message(e);
@@ -33,10 +30,7 @@ class AuthService {
     String? dob,
   }) async {
     try {
-      final cred = await _auth.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: password,
-      );
+      final cred = await _auth.createUserWithEmailAndPassword(email: email.trim(), password: password);
       final uid = cred.user!.uid;
       await _userService.createUserDoc(
         userid: uid,

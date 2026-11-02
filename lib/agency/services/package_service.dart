@@ -4,19 +4,14 @@ import 'package:seafety_travel/shared/models/package_model.dart';
 class PackageService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> get _col =>
-      _db.collection('packages');
+  CollectionReference<Map<String, dynamic>> get _col => _db.collection('packages');
 
   // Live list of agency's packages
   Stream<List<PackageModel>> myPackages(String agencyuserid) {
     return _col
         .where('agencyuserid', isEqualTo: agencyuserid)
         .snapshots()
-        .map(
-          (snap) => snap.docs
-              .map((d) => PackageModel.fromMap(d.id, d.data()))
-              .toList(),
-        );
+        .map((snap) => snap.docs.map((d) => PackageModel.fromMap(d.id, d.data())).toList());
   }
 
   Future<void> addPackage({

@@ -86,7 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
     if (!mounted) return;
     if (result == null) {
-      // Signup succeeded. AuthGate will route the new user automatically.
+      // Signup successful, StreamBuilder in auth gate will navigate automatically
       Navigator.pop(context);
     } else {
       setState(() {
@@ -111,31 +111,26 @@ class _SignupScreenState extends State<SignupScreen> {
                 TextFormField(
                   controller: _firstnameController,
                   decoration: const InputDecoration(labelText: 'First name'),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _lastnameController,
                   decoration: const InputDecoration(labelText: 'Last name'),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password (min 6 characters)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Password (min 6 characters)'),
                   validator: (v) {
                     if (v == null || v.isEmpty) return 'Required';
                     if (v.length < 6) return 'At least 6 characters';
@@ -148,11 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         padding: EdgeInsets.symmetric(vertical: 8),
                         child: Row(
                           children: [
-                            SizedBox(
-                              height: 18,
-                              width: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
+                            SizedBox(height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2)),
                             SizedBox(width: 12),
                             Text('Loading countries...'),
                           ],
@@ -161,22 +152,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     : DropdownButtonFormField<String>(
                         initialValue: _country,
                         isExpanded: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Country (optional)',
-                        ),
-                        items: _countries
-                            .map(
-                              (c) => DropdownMenuItem(value: c, child: Text(c)),
-                            )
-                            .toList(),
+                        decoration: const InputDecoration(labelText: 'Country (optional)'),
+                        items: _countries.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
                         onChanged: (value) => setState(() => _country = value),
                       ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   initialValue: _gender,
-                  decoration: const InputDecoration(
-                    labelText: 'Gender (optional)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Gender (optional)'),
                   items: const [
                     DropdownMenuItem(value: 'Male', child: Text('Male')),
                     DropdownMenuItem(value: 'Female', child: Text('Female')),
@@ -192,9 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       labelText: 'Date of birth (optional)',
                       suffixIcon: Icon(Icons.calendar_today),
                     ),
-                    child: Text(
-                      _dob == null ? 'Select date' : _formatDob(_dob!),
-                    ),
+                    child: Text(_dob == null ? 'Select date' : _formatDob(_dob!)),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -213,10 +194,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
                       : const Text('Sign Up'),
                 ),

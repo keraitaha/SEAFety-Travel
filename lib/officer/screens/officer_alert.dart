@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
- 
+
 import '../services/officer_firebase_service.dart';
- 
+
 class OfficerAlerts extends StatefulWidget {
   const OfficerAlerts({super.key});
- 
+
   @override
   State<OfficerAlerts> createState() => _OfficerAlertsState();
 }
- 
+
 class _OfficerAlertsState extends State<OfficerAlerts> {
   final _service = OfficerFirebaseService();
- 
+
   // Option lists for the dropdowns. Keeping them in one place means the
   // initial value and the items can never get out of sync.
   static const List<String> _types = [
@@ -24,26 +24,20 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
     'Other',
   ];
   static const List<String> _risks = ['Low', 'Medium', 'High', 'Critical'];
- 
-  // 'Published' is included because existing alerts already use it.
-  // Remove it if you do not want officers to pick it.
   static const List<String> _statuses = [
     'Active',
     'Published',
     'Resolved',
     'Expired',
   ];
- 
-  /// Returns [value] if it is one of [options], otherwise [fallback].
-  /// Prevents the DropdownButton assertion when Firestore holds a value
-  /// that is not in the list.
+
   String _pick(dynamic value, List<String> options, String fallback) {
     return value is String && options.contains(value) ? value : fallback;
   }
- 
+
   Future<void> _showForm({String? id, Map<String, dynamic>? existing}) async {
     final formKey = GlobalKey<FormState>();
- 
+
     final title = TextEditingController(text: existing?['title'] ?? '');
     final description = TextEditingController(
       text: existing?['description'] ?? '',
@@ -61,15 +55,15 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
     final radius = TextEditingController(
       text: existing?['radiusKm']?.toString() ?? '5',
     );
- 
+
     final countries = OfficerFirebaseService.southeastAsianCountries;
- 
+
     String country = _pick(existing?['country'], countries, 'Malaysia');
     String type = _pick(existing?['type'], _types, 'Travel Advisory');
     String risk = _pick(existing?['risk'], _risks, 'Medium');
     String status = _pick(existing?['status'], _statuses, 'Active');
     bool emergency = existing?['isEmergency'] ?? false;
- 
+
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
@@ -239,7 +233,7 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
             FilledButton(
               onPressed: () async {
                 if (!formKey.currentState!.validate()) return;
- 
+
                 final data = <String, dynamic>{
                   'title': title.text.trim(),
                   'description': description.text.trim(),
@@ -251,13 +245,13 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
                   'sourceUrl': sourceUrl.text.trim(),
                   'isEmergency': emergency,
                 };
- 
+
                 if (emergency) {
                   data['latitude'] = double.parse(latitude.text.trim());
                   data['longitude'] = double.parse(longitude.text.trim());
                   data['radiusKm'] = double.parse(radius.text.trim());
                 }
- 
+
                 // Non-emergency alerts simply omit location fields.
                 try {
                   if (id == null) {
@@ -265,7 +259,7 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
                   } else {
                     await _service.updateAlert(id, data);
                   }
- 
+
                   if (dialogContext.mounted) {
                     Navigator.pop(dialogContext);
                   }
@@ -283,9 +277,8 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
         ),
       ),
     );
- 
   }
- 
+
   Future<void> _delete(String id) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -304,7 +297,7 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
         ],
       ),
     );
- 
+
     if (confirm == true) {
       try {
         await _service.deleteAlert(id);
@@ -317,7 +310,7 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
       }
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -330,20 +323,20 @@ class _OfficerAlertsState extends State<OfficerAlerts> {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
- 
+
           final docs = snapshot.data!.docs;
- 
+
           if (docs.isEmpty) {
             return const Center(child: Text('No safety alerts yet.'));
           }
- 
+
           return ListView.builder(
             padding: const EdgeInsets.all(12),
             itemCount: docs.length,
             itemBuilder: (context, index) {
               final doc = docs[index];
               final data = doc.data();
- 
+
               return Card(
                 child: ListTile(
                   leading: Icon(

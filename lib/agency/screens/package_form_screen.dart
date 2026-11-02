@@ -12,11 +12,7 @@ import '../services/package_service.dart';
 class PackageFormScreen extends StatefulWidget {
   final AppUser currentUser;
   final PackageModel? existing;
-  const PackageFormScreen({
-    super.key,
-    required this.currentUser,
-    this.existing,
-  });
+  const PackageFormScreen({super.key, required this.currentUser, this.existing});
 
   @override
   State<PackageFormScreen> createState() => _PackageFormScreenState();
@@ -100,11 +96,7 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
       imageurl = uploaded;
     }
 
-    final inclusions = _inclusionsController.text
-        .split(',')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
+    final inclusions = _inclusionsController.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
     final price = double.tryParse(_priceController.text.trim()) ?? 0;
     final duration = int.tryParse(_durationController.text.trim()) ?? 0;
 
@@ -158,11 +150,7 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _ImagePreview(
-                  pickedImage: _pickedImage,
-                  imageurl: _imageurl,
-                  onPick: _saving ? null : _pickImage,
-                ),
+                _ImagePreview(pickedImage: _pickedImage, imageurl: _imageurl, onPick: _saving ? null : _pickImage),
                 const SizedBox(height: 16),
                 StreamBuilder<List<DestinationModel>>(
                   stream: _destinationService.publishedDestinations(),
@@ -170,19 +158,11 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
                     final destinations = snapshot.data ?? [];
                     return DropdownButtonFormField<String>(
                       initialValue: _destinationid,
-                      decoration: const InputDecoration(
-                        labelText: 'Destination',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Destination'),
                       items: destinations
-                          .map(
-                            (d) => DropdownMenuItem(
-                              value: d.destinationid,
-                              child: Text('${d.name} (${d.country})'),
-                            ),
-                          )
+                          .map((d) => DropdownMenuItem(value: d.destinationid, child: Text('${d.name} (${d.country})')))
                           .toList(),
-                      onChanged: (value) =>
-                          setState(() => _destinationid = value),
+                      onChanged: (value) => setState(() => _destinationid = value),
                     );
                   },
                 ),
@@ -190,24 +170,20 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
                 TextFormField(
                   controller: _titleController,
                   decoration: const InputDecoration(labelText: 'Title'),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 3,
                   decoration: const InputDecoration(labelText: 'Description'),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _priceController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Price (MYR)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Price (MYR)'),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Required';
                     if (double.tryParse(v.trim()) == null) {
@@ -220,9 +196,7 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
                 TextFormField(
                   controller: _durationController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Duration (days)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Duration (days)'),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Required';
                     if (int.tryParse(v.trim()) == null) {
@@ -244,21 +218,11 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
                   initialValue: _availability,
                   decoration: const InputDecoration(labelText: 'Availability'),
                   items: const [
-                    DropdownMenuItem(
-                      value: 'available',
-                      child: Text('Available'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'limited',
-                      child: Text('Limited'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'unavailable',
-                      child: Text('Unavailable'),
-                    ),
+                    DropdownMenuItem(value: 'available', child: Text('Available')),
+                    DropdownMenuItem(value: 'limited', child: Text('Limited')),
+                    DropdownMenuItem(value: 'unavailable', child: Text('Unavailable')),
                   ],
-                  onChanged: (value) =>
-                      setState(() => _availability = value ?? 'available'),
+                  onChanged: (value) => setState(() => _availability = value ?? 'available'),
                 ),
                 SwitchListTile(
                   title: const Text('Published'),
@@ -269,10 +233,7 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
                 if (_error != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: Text(
-                      _error!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
+                    child: Text(_error!, style: const TextStyle(color: Colors.red)),
                   ),
                 ElevatedButton(
                   onPressed: _saving ? null : _save,
@@ -280,10 +241,7 @@ class _PackageFormScreenState extends State<PackageFormScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
                       : Text(isEdit ? 'Save Changes' : 'Create Package'),
                 ),
@@ -300,11 +258,7 @@ class _ImagePreview extends StatelessWidget {
   final File? pickedImage;
   final String imageurl;
   final VoidCallback? onPick;
-  const _ImagePreview({
-    required this.pickedImage,
-    required this.imageurl,
-    required this.onPick,
-  });
+  const _ImagePreview({required this.pickedImage, required this.imageurl, required this.onPick});
 
   @override
   Widget build(BuildContext context) {
@@ -330,10 +284,7 @@ class _ImagePreview extends StatelessWidget {
       child: Container(
         height: 160,
         width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.paleBlue,
-          borderRadius: BorderRadius.circular(12),
-        ),
+        decoration: BoxDecoration(color: AppColors.paleBlue, borderRadius: BorderRadius.circular(12)),
         clipBehavior: Clip.antiAlias,
         child: content,
       ),

@@ -27,18 +27,13 @@ class AppTheme {
           backgroundColor: AppColors.primaryBlue,
           foregroundColor: AppColors.white,
           padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.paleBlue,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none,
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
     );
   }

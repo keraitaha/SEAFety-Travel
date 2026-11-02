@@ -4,7 +4,7 @@ class OfficerFirebaseService {
   final FirebaseFirestore _db;
 
   OfficerFirebaseService({FirebaseFirestore? firestore})
-      : _db = firestore ?? FirebaseFirestore.instance;
+    : _db = firestore ?? FirebaseFirestore.instance;
 
   static const List<String> southeastAsianCountries = [
     'Brunei',
@@ -45,7 +45,6 @@ class OfficerFirebaseService {
   CollectionReference<Map<String, dynamic>> get _users =>
       _db.collection('users');
 
-
   // DESTINATIONS
 
   Stream<QuerySnapshot<Map<String, dynamic>>> watchDestinations() {
@@ -58,8 +57,7 @@ class OfficerFirebaseService {
     await _destinations.add(data);
   }
 
-  Future<void> updateDestination(
-      String id, Map<String, dynamic> data) async {
+  Future<void> updateDestination(String id, Map<String, dynamic> data) async {
     _validateCountry(data['country']);
     data['lastUpdated'] = FieldValue.serverTimestamp();
     await _destinations.doc(id).update(data);
@@ -68,7 +66,6 @@ class OfficerFirebaseService {
   Future<void> deleteDestination(String id) async {
     await _destinations.doc(id).delete();
   }
-
 
   // SAFETY ALERTS
 
@@ -136,9 +133,7 @@ class OfficerFirebaseService {
       throw ArgumentError('Please select a valid user role.');
     }
 
-    await _users.doc(userId).update({
-      'role': newRole,
-    });
+    await _users.doc(userId).update({'role': newRole});
   }
 
   static String getRoleName(int role) {
@@ -160,12 +155,8 @@ class OfficerFirebaseService {
   // VALIDATION
 
   void _validateCountry(dynamic country) {
-    if (country is! String ||
-        !southeastAsianCountries.contains(country)) {
-      throw ArgumentError(
-        'Please select a valid Southeast Asian country.',
-      );
+    if (country is! String || !southeastAsianCountries.contains(country)) {
+      throw ArgumentError('Please select a valid Southeast Asian country.');
     }
   }
 }
-

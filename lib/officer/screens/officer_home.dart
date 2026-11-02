@@ -60,10 +60,7 @@ class _OfficerHomeState extends State<OfficerHome> {
         ],
       ),
 
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _screens),
 
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
@@ -108,5 +105,3 @@ class _OfficerHomeState extends State<OfficerHome> {
     );
   }
 }
-
-

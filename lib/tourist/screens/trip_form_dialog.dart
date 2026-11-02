@@ -25,14 +25,10 @@ class _TripFormDialogState extends State<TripFormDialog> {
     final trip = widget.existing;
     name = TextEditingController(text: trip?.title ?? '');
     budget = TextEditingController(text: trip?.budget.toStringAsFixed(2) ?? '');
-    destinationId =
-        trip?.destinationId ??
-        (widget.places.isNotEmpty ? widget.places.first.id : '');
+    destinationId = trip?.destinationId ?? (widget.places.isNotEmpty ? widget.places.first.id : '');
     status = trip?.status ?? 'planned';
     start = DateTime.tryParse(trip?.startDate ?? '') ?? DateTime.now();
-    end =
-        DateTime.tryParse(trip?.endDate ?? '') ??
-        start.add(const Duration(days: 1));
+    end = DateTime.tryParse(trip?.endDate ?? '') ?? start.add(const Duration(days: 1));
   }
 
   @override
@@ -94,10 +90,7 @@ class _TripFormDialogState extends State<TripFormDialog> {
           ),
           const SizedBox(height: 10),
           DropdownButtonFormField<String>(
-            initialValue:
-                widget.places.any((place) => place.id == destinationId)
-                ? destinationId
-                : null,
+            initialValue: widget.places.any((place) => place.id == destinationId) ? destinationId : null,
             isExpanded: true,
             decoration: const InputDecoration(labelText: 'Destination'),
             items: widget.places
@@ -132,9 +125,11 @@ class _TripFormDialogState extends State<TripFormDialog> {
           DropdownButtonFormField<String>(
             initialValue: status,
             decoration: const InputDecoration(labelText: 'Status'),
-            items: ['planned', 'ongoing', 'completed']
-                .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-                .toList(),
+            items: [
+              'planned',
+              'ongoing',
+              'completed',
+            ].map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
             onChanged: (value) => setState(() => status = value ?? 'planned'),
           ),
           if (error != null)
@@ -146,10 +141,7 @@ class _TripFormDialogState extends State<TripFormDialog> {
       ),
     ),
     actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
-      ),
+      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
       FilledButton(onPressed: _save, child: const Text('Save')),
     ],
   );

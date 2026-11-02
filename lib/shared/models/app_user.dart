@@ -51,15 +51,4 @@ class AppUser {
       'createtime': createtime ?? FieldValue.serverTimestamp(),
     };
   }
-
-  static String roleLabel(int role) {
-    switch (role) {
-      case 1:
-        return 'Travel Agency';
-      case 2:
-        return 'Tourism Officer';
-      default:
-        return 'Tourist';
-    }
-  }
 }

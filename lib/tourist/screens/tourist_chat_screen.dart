@@ -12,19 +12,12 @@ class TouristInboxScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const SectionTitle(
-          'Conversations',
-          subtitle: 'Speak directly with travel agencies and tourism officers',
-        ),
+        const SectionTitle('Conversations', subtitle: 'Speak directly with travel agencies and tourism officers'),
         if (store.threads.isEmpty)
           const InfoCard(
             child: Column(
               children: [
-                Icon(
-                  Icons.forum_outlined,
-                  size: 38,
-                  color: TouristPalette.blue,
-                ),
+                Icon(Icons.forum_outlined, size: 38, color: TouristPalette.blue),
                 SizedBox(height: 10),
                 Text('No conversations yet.'),
                 Text('Open a package to contact its travel agency.'),
@@ -37,21 +30,15 @@ class TouristInboxScreen extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               leading: CircleAvatar(
                 backgroundColor: TouristPalette.ice,
-                child: Icon(
-                  thread.type == 'agency' ? Icons.storefront : Icons.shield,
-                  color: TouristPalette.navy,
-                ),
+                child: Icon(thread.type == 'agency' ? Icons.storefront : Icons.shield, color: TouristPalette.navy),
               ),
-              title: Text(
-                thread.type == 'agency' ? 'Travel agency' : 'Tourism officer',
-              ),
+              title: Text(thread.type == 'agency' ? 'Travel agency' : 'Tourism officer'),
               subtitle: Text('Status: ${thread.status}'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      TouristChatScreen(store: store, thread: thread),
+                  builder: (_) => TouristChatScreen(store: store, thread: thread),
                 ),
               ),
             ),
@@ -63,16 +50,12 @@ class TouristInboxScreen extends StatelessWidget {
               ? null
               : () async {
                   try {
-                    final thread = await store.openConversation(
-                      staffId: store.officerId!,
-                      type: 'officer',
-                    );
+                    final thread = await store.openConversation(staffId: store.officerId!, type: 'officer');
                     if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            TouristChatScreen(store: store, thread: thread),
+                        builder: (_) => TouristChatScreen(store: store, thread: thread),
                       ),
                     );
                   } catch (error) {
@@ -96,11 +79,7 @@ class TouristInboxScreen extends StatelessWidget {
 class TouristChatScreen extends StatefulWidget {
   final TouristStore store;
   final ChatThread thread;
-  const TouristChatScreen({
-    super.key,
-    required this.store,
-    required this.thread,
-  });
+  const TouristChatScreen({super.key, required this.store, required this.thread});
 
   @override
   State<TouristChatScreen> createState() => _TouristChatScreenState();
@@ -142,17 +121,10 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: widget.store,
     builder: (context, child) {
-      final messages =
-          widget.store.messages[widget.thread.id] ?? <ChatMessage>[];
+      final messages = widget.store.messages[widget.thread.id] ?? <ChatMessage>[];
       return Scaffold(
         backgroundColor: TouristPalette.background,
-        appBar: AppBar(
-          title: Text(
-            widget.thread.type == 'agency'
-                ? 'Agency chat'
-                : 'Tourism officer chat',
-          ),
-        ),
+        appBar: AppBar(title: Text(widget.thread.type == 'agency' ? 'Agency chat' : 'Tourism officer chat')),
         body: Column(
           children: [
             if (widget.thread.type == 'officer')
@@ -173,52 +145,35 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
                         final message = messages[i];
                         final own = message.senderId == widget.store.userId;
                         final prev = i > 0 ? messages[i - 1] : null;
-                        final showDate = prev == null ||
-                            !_sameDay(message.createdAt, prev.createdAt);
+                        final showDate = prev == null || !_sameDay(message.createdAt, prev.createdAt);
                         return Column(
                           children: [
                             if (showDate) _DateSeparator(date: message.createdAt),
                             Align(
-                          alignment: own
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxWidth: MediaQuery.sizeOf(context).width * 0.78,
-                            ),
-                            margin: const EdgeInsets.only(bottom: 9),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: own
-                                  ? TouristPalette.navy
-                                  : TouristPalette.ice,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  message.text,
-                                  style: TextStyle(
-                                    color: own ? Colors.white : Colors.black87,
-                                  ),
+                              alignment: own ? Alignment.centerRight : Alignment.centerLeft,
+                              child: Container(
+                                constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.78),
+                                margin: const EdgeInsets.only(bottom: 9),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: own ? TouristPalette.navy : TouristPalette.ice,
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: own
-                                        ? Colors.white70
-                                        : Colors.blueGrey.shade600,
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(message.text, style: TextStyle(color: own ? Colors.white : Colors.black87)),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '${message.createdAt.hour.toString().padLeft(2, '0')}:${message.createdAt.minute.toString().padLeft(2, '0')}',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: own ? Colors.white70 : Colors.blueGrey.shade600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
                             ),
                           ],
                         );
@@ -237,16 +192,11 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
                         textCapitalization: TextCapitalization.sentences,
                         minLines: 1,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a message…',
-                        ),
+                        decoration: const InputDecoration(hintText: 'Type a message…'),
                       ),
                     ),
                     const SizedBox(width: 8),
-                    IconButton.filled(
-                      onPressed: sending ? null : _send,
-                      icon: const Icon(Icons.send),
-                    ),
+                    IconButton.filled(onPressed: sending ? null : _send, icon: const Icon(Icons.send)),
                   ],
                 ),
               ),
@@ -258,8 +208,7 @@ class _TouristChatScreenState extends State<TouristChatScreen> {
   );
 }
 
-bool _sameDay(DateTime a, DateTime b) =>
-    a.year == b.year && a.month == b.month && a.day == b.day;
+bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
 String _dateLabel(DateTime date) {
   final now = DateTime.now();
@@ -268,10 +217,7 @@ String _dateLabel(DateTime date) {
   final diff = today.difference(that).inDays;
   if (diff == 0) return 'Today';
   if (diff == 1) return 'Yesterday';
-  const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return '${date.day} ${months[date.month - 1]} ${date.year}';
 }
 
@@ -285,14 +231,8 @@ class _DateSeparator extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        decoration: BoxDecoration(
-          color: TouristPalette.ice,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          _dateLabel(date),
-          style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700),
-        ),
+        decoration: BoxDecoration(color: TouristPalette.ice, borderRadius: BorderRadius.circular(12)),
+        child: Text(_dateLabel(date), style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700)),
       ),
     );
   }

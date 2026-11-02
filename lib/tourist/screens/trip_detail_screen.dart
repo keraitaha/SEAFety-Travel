@@ -7,11 +7,7 @@ import 'package_detail_screen.dart';
 class TripDetailScreen extends StatefulWidget {
   final TouristStore store;
   final String tripId;
-  const TripDetailScreen({
-    super.key,
-    required this.store,
-    required this.tripId,
-  });
+  const TripDetailScreen({super.key, required this.store, required this.tripId});
 
   @override
   State<TripDetailScreen> createState() => _TripDetailScreenState();
@@ -54,30 +50,19 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.store.placeById(trip.destinationId)?.name ??
-                        'Destination unavailable',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: TouristPalette.navy,
-                    ),
+                    widget.store.placeById(trip.destinationId)?.name ?? 'Destination unavailable',
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: TouristPalette.navy),
                   ),
                   Text('${trip.startDate} – ${trip.endDate} · ${trip.status}'),
                   const Divider(height: 24),
                   Text(
                     money(total),
-                    style: const TextStyle(
-                      fontSize: 29,
-                      fontWeight: FontWeight.w800,
-                      color: TouristPalette.navy,
-                    ),
+                    style: const TextStyle(fontSize: 29, fontWeight: FontWeight.w800, color: TouristPalette.navy),
                   ),
                   Text('Estimated cost of trip · budget ${money(trip.budget)}'),
                   const SizedBox(height: 10),
                   LinearProgressIndicator(
-                    value: trip.budget <= 0
-                        ? 0.0
-                        : (total / trip.budget).clamp(0.0, 1.0).toDouble(),
+                    value: trip.budget <= 0 ? 0.0 : (total / trip.budget).clamp(0.0, 1.0).toDouble(),
                     minHeight: 8,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -86,18 +71,14 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       padding: EdgeInsets.only(top: 8),
                       child: Text(
                         'Over your planned budget',
-                        style: TextStyle(
-                          color: Colors.deepOrange,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold),
                       ),
                     ),
                 ],
               ),
             ),
             const SectionTitle('Selected packages'),
-            if (trip.packageIds.isEmpty)
-              const InfoCard(child: Text('No packages added yet.')),
+            if (trip.packageIds.isEmpty) const InfoCard(child: Text('No packages added yet.')),
             ...trip.packageIds.map((id) {
               final item = widget.store.packageById(id);
               return InfoCard(
@@ -111,11 +92,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                             item?.title ?? 'Package no longer available',
                             style: const TextStyle(fontWeight: FontWeight.w800),
                           ),
-                          Text(
-                            item == null
-                                ? 'Check with agency'
-                                : money(item.price),
-                          ),
+                          Text(item == null ? 'Check with agency' : money(item.price)),
                         ],
                       ),
                     ),
@@ -126,10 +103,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => PackageDetailScreen(
-                              store: widget.store,
-                              item: item,
-                            ),
+                            builder: (_) => PackageDetailScreen(store: widget.store, item: item),
                           ),
                         ),
                       ),
@@ -147,45 +121,24 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               icon: const Icon(Icons.add),
               label: const Text('Add a package'),
             ),
-            const SectionTitle(
-              'Daily itinerary',
-              subtitle: 'Extra costs not included in packages',
-            ),
-            wideAction(
-              'Add activity',
-              () => _editActivity(trip),
-              icon: Icons.add,
-            ),
+            const SectionTitle('Daily itinerary', subtitle: 'Extra costs not included in packages'),
+            wideAction('Add activity', () => _editActivity(trip), icon: Icons.add),
             const SizedBox(height: 12),
-            if (activities.isEmpty)
-              const InfoCard(
-                child: Text('No activities yet. Add the first stop.'),
-              ),
+            if (activities.isEmpty) const InfoCard(child: Text('No activities yet. Add the first stop.')),
             ...activities.map(
               (item) => InfoCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.name,
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                    Text(
-                      '${item.date}${item.time.isEmpty ? '' : ' · ${item.time}'}',
-                    ),
+                    Text(item.name, style: const TextStyle(fontWeight: FontWeight.w800)),
+                    Text('${item.date}${item.time.isEmpty ? '' : ' · ${item.time}'}'),
                     Text('Extra cost: ${money(item.cost)}'),
                     if (item.notes.isNotEmpty) Text(item.notes),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton(
-                          onPressed: () => _editActivity(trip, item),
-                          child: const Text('Edit'),
-                        ),
-                        TextButton(
-                          onPressed: () => _deleteActivity(trip.id, item.id),
-                          child: const Text('Remove'),
-                        ),
+                        TextButton(onPressed: () => _editActivity(trip, item), child: const Text('Edit')),
+                        TextButton(onPressed: () => _deleteActivity(trip.id, item.id), child: const Text('Remove')),
                       ],
                     ),
                   ],
@@ -201,16 +154,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
 
   Future<void> _removePackage(Trip trip, String packageId) async {
     try {
-      await widget.store.saveTrip(
-        trip.withPackages(
-          trip.packageIds.where((id) => id != packageId).toList(),
-        ),
-      );
+      await widget.store.saveTrip(trip.withPackages(trip.packageIds.where((id) => id != packageId).toList()));
       if (mounted) {
-        showNotice(
-          context,
-          'Package removed from trip, not cancelled with agency.',
-        );
+        showNotice(context, 'Package removed from trip, not cancelled with agency.');
       }
     } catch (error) {
       if (mounted) showNotice(context, shortError(error));
@@ -238,10 +184,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           children: [
             const Padding(
               padding: EdgeInsets.all(16),
-              child: Text(
-                'Select package',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              child: Text('Select package', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             ...available.map(
               (item) => ListTile(
@@ -307,27 +250,18 @@ class _ActivityFormDialogState extends State<ActivityFormDialog> {
   void initState() {
     super.initState();
     name = TextEditingController(text: widget.existing?.name ?? '');
-    cost = TextEditingController(
-      text: widget.existing?.cost.toStringAsFixed(2) ?? '0',
-    );
+    cost = TextEditingController(text: widget.existing?.cost.toStringAsFixed(2) ?? '0');
     notes = TextEditingController(text: widget.existing?.notes ?? '');
     final first = DateTime.parse(widget.trip.startDate);
     final last = DateTime.parse(widget.trip.endDate);
     final original = DateTime.tryParse(widget.existing?.date ?? '') ?? first;
-    date = original.isBefore(first)
-        ? first
-        : (original.isAfter(last) ? last : original);
+    date = original.isBefore(first) ? first : (original.isAfter(last) ? last : original);
     final saved = widget.existing?.time ?? '';
     final parts = saved.split(':');
     if (parts.length == 2) {
       final hour = int.tryParse(parts[0]);
       final minute = int.tryParse(parts[1]);
-      if (hour != null &&
-          minute != null &&
-          hour >= 0 &&
-          minute >= 0 &&
-          hour < 24 &&
-          minute < 60) {
+      if (hour != null && minute != null && hour >= 0 && minute >= 0 && hour < 24 && minute < 60) {
         activityTime = TimeOfDay(hour: hour, minute: minute);
       }
     }
@@ -348,10 +282,7 @@ class _ActivityFormDialogState extends State<ActivityFormDialog> {
 
   void _save() {
     final price = double.tryParse(cost.text.trim());
-    if (name.text.trim().isEmpty ||
-        price == null ||
-        !price.isFinite ||
-        price < 0) {
+    if (name.text.trim().isEmpty || price == null || !price.isFinite || price < 0) {
       setState(() => error = 'Enter a name and a valid non-negative cost.');
       return;
     }
@@ -384,9 +315,7 @@ class _ActivityFormDialogState extends State<ActivityFormDialog> {
           TextField(
             controller: cost,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
-              labelText: 'Additional cost (MYR)',
-            ),
+            decoration: const InputDecoration(labelText: 'Additional cost (MYR)'),
           ),
           const SizedBox(height: 10),
           ListTile(
@@ -408,8 +337,7 @@ class _ActivityFormDialogState extends State<ActivityFormDialog> {
             onTap: () async {
               final selected = await showTimePicker(
                 context: context,
-                initialTime:
-                    activityTime ?? const TimeOfDay(hour: 9, minute: 0),
+                initialTime: activityTime ?? const TimeOfDay(hour: 9, minute: 0),
               );
               if (selected != null) setState(() => activityTime = selected);
             },
@@ -420,16 +348,12 @@ class _ActivityFormDialogState extends State<ActivityFormDialog> {
             maxLines: 2,
             decoration: const InputDecoration(labelText: 'Notes (optional)'),
           ),
-          if (error != null)
-            Text(error!, style: const TextStyle(color: Colors.red)),
+          if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),
         ],
       ),
     ),
     actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
-      ),
+      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
       FilledButton(onPressed: _save, child: const Text('Save')),
     ],
   );

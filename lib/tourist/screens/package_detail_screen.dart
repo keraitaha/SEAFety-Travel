@@ -8,11 +8,7 @@ import 'tourist_chat_screen.dart';
 class PackageDetailScreen extends StatefulWidget {
   final TouristStore store;
   final TravelPackage item;
-  const PackageDetailScreen({
-    super.key,
-    required this.store,
-    required this.item,
-  });
+  const PackageDetailScreen({super.key, required this.store, required this.item});
 
   @override
   State<PackageDetailScreen> createState() => _PackageDetailScreenState();
@@ -41,10 +37,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
   Widget _details(BuildContext context, TravelPackage item) {
     final place = widget.store.placeById(item.destinationId);
     final reviews = widget.store.reviews
-        .where(
-          (review) =>
-              review.targetType == 'package' && review.targetId == item.id,
-        )
+        .where((review) => review.targetType == 'package' && review.targetId == item.id)
         .toList();
     return Scaffold(
       backgroundColor: TouristPalette.background,
@@ -53,26 +46,17 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           DestinationArt(
-            imageUrl: item.imageUrl.isEmpty
-                ? (place?.imageUrl ?? '')
-                : item.imageUrl,
+            imageUrl: item.imageUrl.isEmpty ? (place?.imageUrl ?? '') : item.imageUrl,
             height: 185,
             icon: Icons.card_travel,
           ),
           const SizedBox(height: 12),
           Text(
             item.title,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-              color: TouristPalette.navy,
-            ),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: TouristPalette.navy),
           ),
           if (place != null)
-            Text(
-              '${place.name} · ${locationOf(place)}',
-              style: TextStyle(color: Colors.blueGrey.shade600),
-            ),
+            Text('${place.name} · ${locationOf(place)}', style: TextStyle(color: Colors.blueGrey.shade600)),
           const SizedBox(height: 12),
           InfoCard(
             child: Column(
@@ -80,33 +64,26 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
               children: [
                 Text(
                   money(item.price),
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: TouristPalette.navy,
-                  ),
+                  style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: TouristPalette.navy),
                 ),
-                Text(
-                  'Per package · ${item.durationDays} day(s) · ${item.availability}',
-                ),
+                Text('Per package · ${item.durationDays} day(s) · ${item.availability}'),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     const Text('View price in '),
                     DropdownButton<String>(
                       value: currency,
-                      items: ['MYR', 'EUR', 'USD', 'GBP']
-                          .map(
-                            (v) => DropdownMenuItem(value: v, child: Text(v)),
-                          )
-                          .toList(),
+                      items: [
+                        'MYR',
+                        'EUR',
+                        'USD',
+                        'GBP',
+                      ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
                       onChanged: (v) {
                         if (v == null) return;
                         setState(() {
                           currency = v;
-                          converted = v == 'MYR'
-                              ? null
-                              : CurrencyService().convertFromMyr(item.price, v);
+                          converted = v == 'MYR' ? null : CurrencyService().convertFromMyr(item.price, v);
                         });
                       },
                     ),
@@ -120,9 +97,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
                         return const Text('Loading exchange rate…');
                       }
                       if (state.hasError) {
-                        return const Text(
-                          'Exchange rate unavailable. Price remains in MYR.',
-                        );
+                        return const Text('Exchange rate unavailable. Price remains in MYR.');
                       }
                       return Text(
                         'Approximately $currency ${state.data!.toStringAsFixed(2)}',
@@ -143,10 +118,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
                     (feature) => ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(
-                        Icons.check_circle_outline,
-                        color: TouristPalette.blue,
-                      ),
+                      leading: const Icon(Icons.check_circle_outline, color: TouristPalette.blue),
                       title: Text(feature),
                     ),
                   )
@@ -154,20 +126,15 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
             ),
           ),
           SectionTitle('Reviews', subtitle: '${reviews.length} review(s)'),
-          if (reviews.isEmpty)
-            const InfoCard(child: Text('No published reviews yet.')),
+          if (reviews.isEmpty) const InfoCard(child: Text('No published reviews yet.')),
           ...reviews.map(
             (review) => InfoCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '★' * review.rating.clamp(0, 5).toInt() +
-                        '☆' * (5 - review.rating.clamp(0, 5)).toInt(),
-                    style: const TextStyle(
-                      color: TouristPalette.blue,
-                      fontSize: 18,
-                    ),
+                    '★' * review.rating.clamp(0, 5).toInt() + '☆' * (5 - review.rating.clamp(0, 5)).toInt(),
+                    style: const TextStyle(color: TouristPalette.blue, fontSize: 18),
                   ),
                   Text(review.comment),
                 ],
@@ -177,17 +144,13 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
           const SizedBox(height: 8),
           wideAction(
             'Add package to a trip',
-            busy || item.availability == 'unavailable'
-                ? null
-                : () => _chooseTrip(),
+            busy || item.availability == 'unavailable' ? null : () => _chooseTrip(),
             icon: Icons.add_circle_outline,
           ),
           const SizedBox(height: 8),
           wideAction(
             'Request a booking',
-            busy || item.availability == 'unavailable'
-                ? null
-                : () => _requestBooking(),
+            busy || item.availability == 'unavailable' ? null : () => _requestBooking(),
             icon: Icons.event_available,
           ),
           const SizedBox(height: 8),
@@ -214,10 +177,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
           children: [
             const Padding(
               padding: EdgeInsets.all(16),
-              child: Text(
-                'Add to which trip?',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
+              child: Text('Add to which trip?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             ),
             ...widget.store.trips.map(
               (trip) => ListTile(
@@ -238,9 +198,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
       return;
     }
     await _execute(
-      () => widget.store.saveTrip(
-        trip.withPackages([...trip.packageIds, widget.item.id]),
-      ),
+      () => widget.store.saveTrip(trip.withPackages([...trip.packageIds, widget.item.id])),
       'Package added to your trip. No booking was created.',
     );
   }
@@ -275,8 +233,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-              TouristChatScreen(store: widget.store, thread: thread),
+          builder: (_) => TouristChatScreen(store: widget.store, thread: thread),
         ),
       );
     }, null);

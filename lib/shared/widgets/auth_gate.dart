@@ -17,13 +17,11 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: authService.authState,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _LoadingScreen();
-        }
+        if (snapshot.connectionState == ConnectionState.waiting) return const _LoadingScreen();
+
         final user = snapshot.data;
-        if (user == null) {
-          return const LoginScreen();
-        }
+        if (user == null) return const LoginScreen();
+
         return _RoleRouter(userid: user.uid);
       },
     );
@@ -40,15 +38,11 @@ class _RoleRouter extends StatelessWidget {
     return FutureBuilder<AppUser?>(
       future: userService.getUser(userid),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _LoadingScreen();
-        }
+        if (snapshot.connectionState == ConnectionState.waiting) return const _LoadingScreen();
+
         final appUser = snapshot.data;
-        if (appUser == null) {
-          return const _ErrorScreen(
-            message: 'Could not load your profile. Please log in again.',
-          );
-        }
+        if (appUser == null) return const _ErrorScreen(message: 'Could not load your profile. Please log in again.');
+
         switch (appUser.role) {
           case 1:
             return AgencyHome(currentUser: appUser);
@@ -88,10 +82,7 @@ class _ErrorScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Text(message, textAlign: TextAlign.center),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => AuthService().signOut(),
-                child: const Text('Back to Login'),
-              ),
+              ElevatedButton(onPressed: () => AuthService().signOut(), child: const Text('Back to Login')),
             ],
           ),
         ),

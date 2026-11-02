@@ -58,12 +58,7 @@ class MessageModel {
   final String text;
   final Timestamp? sentat;
 
-  MessageModel({
-    required this.messageid,
-    required this.senderuserid,
-    required this.text,
-    this.sentat,
-  });
+  MessageModel({required this.messageid, required this.senderuserid, required this.text, this.sentat});
 
   factory MessageModel.fromMap(String id, Map<String, dynamic> data) {
     return MessageModel(

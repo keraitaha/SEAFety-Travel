@@ -39,8 +39,7 @@ abstract class TouristStore extends ChangeNotifier {
     return null;
   }
 
-  List<SafetyAlert> alertsFor(Place place) =>
-      alerts.where((alert) => alert.appliesTo(place)).toList();
+  List<SafetyAlert> alertsFor(Place place) => alerts.where((alert) => alert.appliesTo(place)).toList();
 
   void changed() => notifyListeners();
 
@@ -52,16 +51,12 @@ abstract class TouristStore extends ChangeNotifier {
     }
     for (final id in trip.packageIds.toSet()) {
       final item = packageById(id);
-      if (item == null ||
-          item.destinationId != trip.destinationId ||
-          !item.price.isFinite ||
-          item.price < 0) {
+      if (item == null || item.destinationId != trip.destinationId || !item.price.isFinite || item.price < 0) {
         return 'Select valid packages for the trip destination.';
       }
     }
     for (final item in activities[trip.id] ?? <Activity>[]) {
-      if (item.date.compareTo(trip.startDate) < 0 ||
-          item.date.compareTo(trip.endDate) > 0) {
+      if (item.date.compareTo(trip.startDate) < 0 || item.date.compareTo(trip.endDate) > 0) {
         return 'Keep all itinerary activities within the trip dates.';
       }
     }
@@ -76,10 +71,6 @@ abstract class TouristStore extends ChangeNotifier {
   Future<void> loadActivities(String tripId) async {}
   Future<void> loadMessages(String threadId) async {}
   Future<void> requestBooking(TravelPackage item, DateTime travelDate);
-  Future<ChatThread> openConversation({
-    required String staffId,
-    required String type,
-    String? packageId,
-  });
+  Future<ChatThread> openConversation({required String staffId, required String type, String? packageId});
   Future<void> sendMessage(String threadId, String message);
 }

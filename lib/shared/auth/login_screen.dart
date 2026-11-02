@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../test_credentials.dart';
 import '../theme/app_theme.dart';
 import 'signup_screen.dart';
 
@@ -28,20 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    // TEST ONLY
-    if (_emailController.text.trim().isEmpty && _passwordController.text.isEmpty) {
-      _emailController.text = TestCredentials.email;
-      _passwordController.text = TestCredentials.password;
-    }
     if (!_formKey.currentState!.validate()) return;
     setState(() {
       _loading = true;
       _error = null;
     });
-    final result = await _authService.signIn(
-      _emailController.text,
-      _passwordController.text,
-    );
+    final result = await _authService.signIn(_emailController.text, _passwordController.text);
     if (!mounted) return;
     setState(() {
       _loading = false;
@@ -61,27 +52,17 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/images/seafety_travel_logo.png',
-                    height: 120,
-                  ),
+                  Image.asset('assets/images/seafety_travel_logo.png', height: 120),
                   const SizedBox(height: 16),
                   const Text(
                     'SEAfety Travel',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryBlue,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primaryBlue),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email)),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return 'Please enter your email';
@@ -93,10 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock)),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -122,10 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                             )
                           : const Text('Log In'),
                     ),
@@ -135,12 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _loading
                         ? null
                         : () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const SignupScreen(),
-                              ),
-                            );
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupScreen()));
                           },
                     child: const Text("Don't have an account? Sign up"),
                   ),

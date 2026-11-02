@@ -3,8 +3,7 @@ import 'package:http/http.dart' as http;
 
 class CountryService {
   // Country list API
-  static const String _url =
-      'https://countriesnow.space/api/v0.1/countries/positions';
+  static const String _url = 'https://countriesnow.space/api/v0.1/countries/positions';
 
   // Incase API fails
   static const List<String> _fallback = [

@@ -8,12 +8,7 @@ class ChatScreen extends StatefulWidget {
   final AppUser currentUser;
   final ConversationModel conversation;
   final ConversationService? service;
-  const ChatScreen({
-    super.key,
-    required this.currentUser,
-    required this.conversation,
-    this.service,
-  });
+  const ChatScreen({super.key, required this.currentUser, required this.conversation, this.service});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -49,11 +44,9 @@ class _ChatScreenState extends State<ChatScreen> {
       if (mounted) _messageController.clear();
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Could not send message. Please try again.'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Could not send message. Please try again.')));
       }
     } finally {
       if (mounted) setState(() => _sending = false);
@@ -68,12 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: options
-              .map(
-                (o) => ListTile(
-                  title: Text(_service.statusLabel(o)),
-                  onTap: () => Navigator.pop(ctx, o),
-                ),
-              )
+              .map((o) => ListTile(title: Text(_service.statusLabel(o)), onTap: () => Navigator.pop(ctx, o)))
               .toList(),
         ),
       ),
@@ -94,9 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (date != null) {
       await _service.setFollowUp(widget.conversation.conversationid, date);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Follow-up reminder set.')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Follow-up reminder set.')));
       }
     }
   }
@@ -104,9 +90,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _removeFollowUp() async {
     await _service.clearFollowUp(widget.conversation.conversationid);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Follow-up reminder removed.')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Follow-up reminder removed.')));
     }
   }
 
@@ -147,21 +131,11 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text(widget.conversation.touristdisplayname),
         actions: [
           IconButton(
-            icon: Icon(
-              widget.conversation.followupat != null
-                  ? Icons.alarm_on
-                  : Icons.alarm_add,
-            ),
-            tooltip: widget.conversation.followupat != null
-                ? 'Follow-up set'
-                : 'Set follow-up',
+            icon: Icon(widget.conversation.followupat != null ? Icons.alarm_on : Icons.alarm_add),
+            tooltip: widget.conversation.followupat != null ? 'Follow-up set' : 'Set follow-up',
             onPressed: _followUp,
           ),
-          IconButton(
-            icon: const Icon(Icons.flag),
-            tooltip: 'Change status',
-            onPressed: _changeStatus,
-          ),
+          IconButton(icon: const Icon(Icons.flag), tooltip: 'Change status', onPressed: _changeStatus),
         ],
       ),
       body: Column(
@@ -178,9 +152,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
                 final messages = snapshot.data ?? [];
                 if (messages.isEmpty) {
-                  return const Center(
-                    child: Text('No messages yet. Say hello!'),
-                  );
+                  return const Center(child: Text('No messages yet. Say hello!'));
                 }
                 return ListView.builder(
                   padding: const EdgeInsets.all(12),
@@ -189,19 +161,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     final m = messages[i];
                     final isMine = m.senderuserid == widget.currentUser.userid;
                     final date = m.sentat?.toDate();
-                    final prevDate = i > 0
-                        ? messages[i - 1].sentat?.toDate()
-                        : null;
-                    final showDate = date != null &&
-                        (prevDate == null || !_sameDay(date, prevDate));
+                    final prevDate = i > 0 ? messages[i - 1].sentat?.toDate() : null;
+                    final showDate = date != null && (prevDate == null || !_sameDay(date, prevDate));
                     return Column(
                       children: [
                         if (showDate) _DateSeparator(date: date),
-                        _MessageBubble(
-                          text: m.text,
-                          isMine: isMine,
-                          sentat: date,
-                        ),
+                        _MessageBubble(text: m.text, isMine: isMine, sentat: date),
                       ],
                     );
                   },
@@ -218,9 +183,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       controller: _messageController,
-                      decoration: const InputDecoration(
-                        hintText: 'Type a message',
-                      ),
+                      decoration: const InputDecoration(hintText: 'Type a message'),
                       minLines: 1,
                       maxLines: 4,
                     ),
@@ -240,8 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-bool _sameDay(DateTime a, DateTime b) =>
-    a.year == b.year && a.month == b.month && a.day == b.day;
+bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
 String _dateLabel(DateTime date) {
   final now = DateTime.now();
@@ -250,10 +212,7 @@ String _dateLabel(DateTime date) {
   final diff = today.difference(that).inDays;
   if (diff == 0) return 'Today';
   if (diff == 1) return 'Yesterday';
-  const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return '${date.day} ${months[date.month - 1]} ${date.year}';
 }
 
@@ -267,14 +226,8 @@ class _DateSeparator extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        decoration: BoxDecoration(
-          color: AppColors.paleBlue,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          _dateLabel(date),
-          style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700),
-        ),
+        decoration: BoxDecoration(color: AppColors.paleBlue, borderRadius: BorderRadius.circular(12)),
+        child: Text(_dateLabel(date), style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700)),
       ),
     );
   }
@@ -284,11 +237,7 @@ class _MessageBubble extends StatelessWidget {
   final String text;
   final bool isMine;
   final DateTime? sentat;
-  const _MessageBubble({
-    required this.text,
-    required this.isMine,
-    this.sentat,
-  });
+  const _MessageBubble({required this.text, required this.isMine, this.sentat});
 
   @override
   Widget build(BuildContext context) {
@@ -297,9 +246,7 @@ class _MessageBubble extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.7,
-        ),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
         decoration: BoxDecoration(
           color: isMine ? AppColors.primaryBlue : AppColors.paleBlue,
           borderRadius: BorderRadius.circular(12),
@@ -307,18 +254,12 @@ class _MessageBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              text,
-              style: TextStyle(color: isMine ? Colors.white : Colors.black87),
-            ),
+            Text(text, style: TextStyle(color: isMine ? Colors.white : Colors.black87)),
             if (sentat != null) ...[
               const SizedBox(height: 4),
               Text(
                 '${sentat!.hour.toString().padLeft(2, '0')}:${sentat!.minute.toString().padLeft(2, '0')}',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: isMine ? Colors.white70 : Colors.blueGrey.shade600,
-                ),
+                style: TextStyle(fontSize: 10, color: isMine ? Colors.white70 : Colors.blueGrey.shade600),
               ),
             ],
           ],

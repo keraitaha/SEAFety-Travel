@@ -35,13 +35,7 @@ class BookingsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      b.touristdisplayname,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text(b.touristdisplayname, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
                     Text('${b.currency} ${b.totalprice.toStringAsFixed(2)}'),
                     const SizedBox(height: 8),
@@ -56,14 +50,8 @@ class BookingsScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton(
-                          onPressed: () => _changeStatus(context, service, b),
-                          child: const Text('Status'),
-                        ),
-                        TextButton(
-                          onPressed: () => _changePayment(context, service, b),
-                          child: const Text('Payment'),
-                        ),
+                        TextButton(onPressed: () => _changeStatus(context, service, b), child: const Text('Status')),
+                        TextButton(onPressed: () => _changePayment(context, service, b), child: const Text('Payment')),
                       ],
                     ),
                   ],
@@ -76,11 +64,7 @@ class BookingsScreen extends StatelessWidget {
     );
   }
 
-  void _changeStatus(
-    BuildContext context,
-    BookingService service,
-    BookingModel b,
-  ) {
+  void _changeStatus(BuildContext context, BookingService service, BookingModel b) {
     _pickOption(
       context,
       title: 'Update booking status',
@@ -96,11 +80,7 @@ class BookingsScreen extends StatelessWidget {
     );
   }
 
-  void _changePayment(
-    BuildContext context,
-    BookingService service,
-    BookingModel b,
-  ) {
+  void _changePayment(BuildContext context, BookingService service, BookingModel b) {
     _pickOption(
       context,
       title: 'Update payment status',
@@ -132,13 +112,7 @@ class BookingsScreen extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
               ...options.map(
                 (o) => ListTile(

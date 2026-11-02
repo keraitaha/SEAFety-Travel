@@ -9,11 +9,7 @@ import 'tourist_chat_screen.dart';
 class DestinationDetailScreen extends StatelessWidget {
   final TouristStore store;
   final Place place;
-  const DestinationDetailScreen({
-    super.key,
-    required this.store,
-    required this.place,
-  });
+  const DestinationDetailScreen({super.key, required this.store, required this.place});
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
@@ -32,67 +28,37 @@ class DestinationDetailScreen extends StatelessWidget {
 
   Widget _details(BuildContext context, Place place) {
     final warnings = store.alertsFor(place);
-    final packages = store.packages
-        .where((p) => p.destinationId == place.id)
-        .toList();
+    final packages = store.packages.where((p) => p.destinationId == place.id).toList();
     return Scaffold(
       backgroundColor: TouristPalette.background,
       appBar: AppBar(title: Text(place.name)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          DestinationArt(
-            imageUrl: place.imageUrl,
-            height: 190,
-            icon: Icons.travel_explore,
-          ),
+          DestinationArt(imageUrl: place.imageUrl, height: 190, icon: Icons.travel_explore),
           const SizedBox(height: 14),
           Text(
             place.name,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              color: TouristPalette.navy,
-            ),
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: TouristPalette.navy),
           ),
-          Text(
-            locationOf(place),
-            style: TextStyle(color: Colors.blueGrey.shade600),
-          ),
+          Text(locationOf(place), style: TextStyle(color: Colors.blueGrey.shade600)),
           const SizedBox(height: 8),
           Text(place.description),
-          const SectionTitle(
-            'Destination safety',
-            subtitle: 'Officer-maintained, source-attributed information',
-          ),
+          const SectionTitle('Destination safety', subtitle: 'Officer-maintained, source-attributed information'),
           InfoCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RiskChip(place.safetyLevel),
-                LabelValue(
-                  icon: Icons.schedule,
-                  label: 'Opening hours',
-                  value: place.openingHours,
-                ),
+                LabelValue(icon: Icons.schedule, label: 'Opening hours', value: place.openingHours),
                 LabelValue(
                   icon: Icons.confirmation_number_outlined,
                   label: 'Entrance fee',
-                  value: place.entranceFee == null
-                      ? 'Not provided'
-                      : money(place.entranceFee!),
+                  value: place.entranceFee == null ? 'Not provided' : money(place.entranceFee!),
                 ),
                 if (place.safetyInfo.isNotEmpty)
-                  LabelValue(
-                    icon: Icons.info_outline,
-                    label: 'Safety guidance',
-                    value: place.safetyInfo,
-                  ),
-                LabelValue(
-                  icon: Icons.fact_check_outlined,
-                  label: 'Visa guidance',
-                  value: place.visaInfo,
-                ),
+                  LabelValue(icon: Icons.info_outline, label: 'Safety guidance', value: place.safetyInfo),
+                LabelValue(icon: Icons.fact_check_outlined, label: 'Visa guidance', value: place.visaInfo),
                 LabelValue(
                   icon: Icons.health_and_safety_outlined,
                   label: 'Emergency information',
@@ -110,9 +76,7 @@ class DestinationDetailScreen extends StatelessWidget {
           const SectionTitle('Current advisories'),
           if (warnings.isEmpty)
             const InfoCard(
-              child: Text(
-                'No published advisories for this destination. This does not guarantee safety.',
-              ),
+              child: Text('No published advisories for this destination. This does not guarantee safety.'),
             ),
           ...warnings.map(
             (warning) => InfoCard(
@@ -122,24 +86,16 @@ class DestinationDetailScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          warning.title,
-                          style: const TextStyle(fontWeight: FontWeight.w800),
-                        ),
+                        child: Text(warning.title, style: const TextStyle(fontWeight: FontWeight.w800)),
                       ),
                       RiskChip(warning.riskLevel),
                     ],
                   ),
-                  Text(
-                    '${warning.riskType.replaceAll('_', ' ')} · ${warning.description}',
-                  ),
+                  Text('${warning.riskType.replaceAll('_', ' ')} · ${warning.description}'),
                   if (warning.updatedAt != null)
                     Text(
                       'Updated: ${warning.updatedAt!.toLocal().toString().substring(0, 16)}',
-                      style: TextStyle(
-                        color: Colors.blueGrey.shade600,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.blueGrey.shade600, fontSize: 12),
                     ),
                   if (warning.sourceUrl.isNotEmpty)
                     TextButton.icon(
@@ -152,8 +108,7 @@ class DestinationDetailScreen extends StatelessWidget {
             ),
           ),
           const SectionTitle('Available packages'),
-          if (packages.isEmpty)
-            const InfoCard(child: Text('No packages published yet.')),
+          if (packages.isEmpty) const InfoCard(child: Text('No packages published yet.')),
           ...packages.map(
             (item) => InfoCard(
               child: ListTile(
@@ -161,16 +116,12 @@ class DestinationDetailScreen extends StatelessWidget {
                 subtitle: Text('${item.durationDays} days'),
                 trailing: Text(
                   money(item.price),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: TouristPalette.navy,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: TouristPalette.navy),
                 ),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        PackageDetailScreen(store: store, item: item),
+                    builder: (_) => PackageDetailScreen(store: store, item: item),
                   ),
                 ),
               ),
@@ -183,16 +134,12 @@ class DestinationDetailScreen extends StatelessWidget {
                 ? null
                 : () async {
                     try {
-                      final thread = await store.openConversation(
-                        staffId: store.officerId!,
-                        type: 'officer',
-                      );
+                      final thread = await store.openConversation(staffId: store.officerId!, type: 'officer');
                       if (!context.mounted) return;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              TouristChatScreen(store: store, thread: thread),
+                          builder: (_) => TouristChatScreen(store: store, thread: thread),
                         ),
                       );
                     } catch (error) {

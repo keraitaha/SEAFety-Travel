@@ -6,10 +6,7 @@ import 'package:seafety_travel/shared/models/app_user.dart';
 class OfficerDashboard extends StatelessWidget {
   final AppUser currentUser;
 
-  const OfficerDashboard({
-    super.key,
-    required this.currentUser,
-  });
+  const OfficerDashboard({super.key, required this.currentUser});
 
   // Get the number of documents in a Firestore collection.
   Stream<int> _count(String collection) {
@@ -21,11 +18,11 @@ class OfficerDashboard extends StatelessWidget {
 
   // Dashboard statistic card.
   Widget _statCard(
-      String title,
-      String collection,
-      IconData icon,
-      Color color,
-      ) {
+    String title,
+    String collection,
+    IconData icon,
+    Color color,
+  ) {
     return Card(
       margin: const EdgeInsets.all(6),
       child: Padding(
@@ -40,19 +37,13 @@ class OfficerDashboard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  icon,
-                  color: color,
-                  size: 28,
-                ),
+                Icon(icon, color: color, size: 28),
 
                 const SizedBox(height: 8),
 
                 Text(
                   count?.toString() ?? '...',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
 
                 const SizedBox(height: 4),
@@ -61,9 +52,7 @@ class OfficerDashboard extends StatelessWidget {
                   title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                  ),
+                  style: const TextStyle(fontSize: 13),
                 ),
               ],
             );
@@ -90,7 +79,7 @@ class OfficerDashboard extends StatelessWidget {
 
           const Text(
             'Manage destination information, safety alerts, '
-                'map zones, and emergency resources.',
+            'map zones, and emergency resources.',
           ),
 
           const SizedBox(height: 20),
@@ -119,12 +108,7 @@ class OfficerDashboard extends StatelessWidget {
                 Colors.orange,
               ),
 
-              _statCard(
-                'Safety Zones',
-                'danger_zones',
-                Icons.map,
-                Colors.red,
-              ),
+              _statCard('Safety Zones', 'danger_zones', Icons.map, Colors.red),
 
               _statCard(
                 'Emergency Resources',
