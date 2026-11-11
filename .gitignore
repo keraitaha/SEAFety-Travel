@@ -53,3 +53,6 @@ tools/firestore-export/*serviceAccount*.json
 tools/firestore-export/firestore-export-*.json
 tools/firestore-export/node_modules/
 **/serviceAccountKey.json
+
+# Google Maps API key (keep out of a public repo)
+android/secrets.properties
